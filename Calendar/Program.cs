@@ -27,6 +27,11 @@ namespace Calendar
                 source = source.Skip(chunkSize);
             }
         }
+
+        public static string JoinString(this IEnumerable<string> source)
+        {
+            return string.Join(Environment.NewLine, source);
+        }
     }
 
     class Program
@@ -38,15 +43,14 @@ namespace Calendar
 
         private static string CreateCalendarString(int year)
         {
-            var calendar = DaysInYear(year)
+            return DaysInYear(year)
                     .GroupBy(d => d.Month)
                     .Select(LayoutMonth)
                     .Chunk(3)
                     .Select(Transpose)
                     .Select(JoinLine)
-                    .SelectMany(Functional.Identity);
-
-            return string.Join(Environment.NewLine, calendar);
+                    .SelectMany(Functional.Identity)
+                    .JoinString();
         }
 
         public static IEnumerable<IEnumerable<T>> Transpose<T>(IEnumerable<IEnumerable<T>> source)
