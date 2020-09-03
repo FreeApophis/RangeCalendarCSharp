@@ -11,11 +11,9 @@ namespace Calendar
     static class Extensions
     {
         public static string Center(this string text, int width)
-        {
-            return new string(' ', (width - text.Length) / 2 + 1)
-                   + text
-                + new string(' ', (width - text.Length) / 2);
-        }
+            => new string(' ', (width - text.Length) / 2 + 1)
+               + text
+               + new string(' ', (width - text.Length) / 2);
 
         public static IEnumerable<IEnumerable<T>> Chunk<T>(this IEnumerable<T> source, int chunkSize)
         {
@@ -29,9 +27,7 @@ namespace Calendar
         }
 
         public static string JoinString(this IEnumerable<string> source)
-        {
-            return string.Join(Environment.NewLine, source);
-        }
+            => string.Join(Environment.NewLine, source);
     }
 
     class Program
@@ -48,13 +44,11 @@ namespace Calendar
             Console.WriteLine(CreateCalendarString(CalendarYear(args)));
         }
 
-        private static int CalendarYear(string[] args)
-        {
-            return args
+        private static int CalendarYear(string[] args) =>
+            args
                 .FirstOrNone()
                 .AndThen(cli => cli.TryParseInt())
                 .GetOrElse(DateTime.Now.Year);
-        }
 
         private static string CreateCalendarString(int year) =>
             DaysInYear(year)
@@ -84,9 +78,7 @@ namespace Calendar
 
 
         private static IEnumerable<string> JoinLine(IEnumerable<IEnumerable<string>> transposed)
-        {
-            return transposed.Select(t => string.Join(' ', t));
-        }
+            => transposed.Select(t => string.Join(' ', t));
 
         private static IEnumerable<string> LayoutMonth(IEnumerable<DateTime> month)
         {
@@ -107,12 +99,11 @@ namespace Calendar
             yield return $"{string.Empty,21}";
         }
 
+        // use ShortestDayNames
+        // https://docs.microsoft.com/en-us/dotnet/api/system.globalization.datetimeformatinfo.shortestdaynames?view=netcore-3.1
+
         private static string Week()
-        {
-            // use ShortestDayNames
-            // https://docs.microsoft.com/en-us/dotnet/api/system.globalization.datetimeformatinfo.shortestdaynames?view=netcore-3.1
-            return " Su Mo Tu We Th Fr Sa";
-        }
+            => " Su Mo Tu We Th Fr Sa";
 
         private static object GetWeekOfYear(in DateTime dateTime)
         {
@@ -127,13 +118,11 @@ namespace Calendar
             return calendar.GetWeekOfYear(dateTime, calendarWeekRule, dayOfWeek);
         }
 
-        private static string MonthName(IEnumerable<DateTime> month)
-        {
-            return month
+        private static string MonthName(IEnumerable<DateTime> month) =>
+            month
                 .FirstOrNone()
                 .Match("No Month", d => d.ToString("MMMM"))
                 .Center(21);
-        }
 
         private static IEnumerable<DateTime> DaysInYear(int year)
         {
