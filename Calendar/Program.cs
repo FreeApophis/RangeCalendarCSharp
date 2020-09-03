@@ -38,6 +38,13 @@ namespace Calendar
     {
         static void Main(string[] args)
         {
+            var cultureInfo = CultureInfo.CurrentCulture;
+
+            Console.WriteLine(cultureInfo.Name);
+            Console.WriteLine(cultureInfo.NativeName);
+            Console.WriteLine(cultureInfo.DateTimeFormat.CalendarWeekRule);
+            Console.WriteLine(cultureInfo.DateTimeFormat.FirstDayOfWeek);
+
             Console.WriteLine(CreateCalendarString(CalendarYear(args)));
         }
 
@@ -102,6 +109,8 @@ namespace Calendar
 
         private static string Week()
         {
+            // use ShortestDayNames
+            // https://docs.microsoft.com/en-us/dotnet/api/system.globalization.datetimeformatinfo.shortestdaynames?view=netcore-3.1
             return " Su Mo Tu We Th Fr Sa";
         }
 
