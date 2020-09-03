@@ -38,20 +38,26 @@ namespace Calendar
     {
         static void Main(string[] args)
         {
-            Console.WriteLine(CreateCalendarString(2020));
+            Console.WriteLine(CreateCalendarString(CalendarYear(args)));
         }
 
-        private static string CreateCalendarString(int year)
+        private static int CalendarYear(string[] args)
         {
-            return DaysInYear(year)
-                    .GroupBy(d => d.Month)
-                    .Select(LayoutMonth)
-                    .Chunk(3)
-                    .Select(Transpose)
-                    .Select(JoinLine)
-                    .SelectMany(Functional.Identity)
-                    .JoinString();
+            return args
+                .FirstOrNone()
+                .AndThen(cli => cli.TryParseInt())
+                .GetOrElse(DateTime.Now.Year);
         }
+
+        private static string CreateCalendarString(int year) =>
+            DaysInYear(year)
+                .GroupBy(d => d.Month)
+                .Select(LayoutMonth)
+                .Chunk(3)
+                .Select(Transpose)
+                .Select(JoinLine)
+                .SelectMany(Functional.Identity)
+                .JoinString();
 
         public static IEnumerable<IEnumerable<T>> Transpose<T>(IEnumerable<IEnumerable<T>> source)
         {
