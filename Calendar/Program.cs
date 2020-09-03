@@ -4,6 +4,7 @@ using System.Linq;
 using Funcky.Extensions;
 using System.Globalization;
 using System.Text;
+using Funcky;
 
 namespace Calendar
 {
@@ -42,8 +43,8 @@ namespace Calendar
                     .Select(LayoutMonth)
                     .Chunk(3)
                     .Select(Transpose)
-                    .Select(JoinVertical)
-                    .Select(JoinHorizontal);
+                    .Select(JoinLine)
+                    .SelectMany(Functional.Identity);
 
             return string.Join(Environment.NewLine, calendar);
         }
@@ -65,13 +66,9 @@ namespace Calendar
         }
 
 
-        private static IEnumerable<string> JoinVertical(IEnumerable<IEnumerable<string>> transposed)
+        private static IEnumerable<string> JoinLine(IEnumerable<IEnumerable<string>> transposed)
         {
             return transposed.Select(t => string.Join(' ', t));
-        }
-        private static string JoinHorizontal(IEnumerable<string> transposed)
-        {
-            return string.Join(Environment.NewLine, transposed);
         }
 
         private static IEnumerable<string> LayoutMonth(IEnumerable<DateTime> month)
