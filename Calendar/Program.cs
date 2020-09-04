@@ -17,17 +17,6 @@ namespace Calendar
                + text
                + new string(' ', (width - text.Length) / 2);
 
-        public static IEnumerable<IEnumerable<T>> Chunk<T>(this IEnumerable<T> source, int chunkSize)
-        {
-            if (chunkSize <= 0) throw new ArgumentException("Chunk size must be greater than zero.", "chunkSize");
-
-            while (source.Any())
-            {
-                yield return source.Take(chunkSize);
-                source = source.Skip(chunkSize);
-            }
-        }
-
         public static string JoinString(this IEnumerable<string> source, string delimiter)
             => string.Join(delimiter, source);
     }
@@ -53,7 +42,7 @@ namespace Calendar
             DaysInYear(year)
                 .GroupAdjacent(d => d.Month)
                 .Select(LayoutMonth)
-                .Chunk(3)
+                .Batch(3)
                 .Select(m => m.Transpose())
                 .Select(JoinLine)
                 .SelectMany(Functional.Identity)
