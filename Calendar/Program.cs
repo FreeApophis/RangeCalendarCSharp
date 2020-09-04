@@ -5,6 +5,7 @@ using Funcky.Extensions;
 using System.Globalization;
 using System.Text;
 using Funcky;
+using MoreLinq;
 
 namespace Calendar
 {
@@ -52,7 +53,7 @@ namespace Calendar
 
         private static string CreateCalendarString(int year) =>
             DaysInYear(year)
-                .GroupBy(d => d.Month)
+                .GroupAdjacent(d => d.Month)
                 .Select(LayoutMonth)
                 .Chunk(3)
                 .Select(Transpose)
@@ -126,7 +127,7 @@ namespace Calendar
 
         private static IEnumerable<DateTime> DaysInYear(int year)
         {
-            var endDay = new DateTime(year + 1, 1, 1);
+            var endDay = new DateTime(year + 1 1, 1);
             var day = new DateTime(year, 1, 1);
 
             while (day < endDay)
