@@ -36,7 +36,7 @@ namespace Calendar
     {
         static void Main(string[] args)
         {
-            CultureInfo.CurrentCulture = new CultureInfo("es");
+            CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
 
             Console.WriteLine($"{CultureInfo.CurrentCulture.NativeName}");
             Console.WriteLine($"{CalendarYear(args)}");
@@ -45,8 +45,8 @@ namespace Calendar
 
         private static int CalendarYear(string[] args) =>
             args
+                .WhereSelect(cli => cli.TryParseInt())
                 .FirstOrNone()
-                .AndThen(cli => cli.TryParseInt())
                 .GetOrElse(DateTime.Now.Year);
 
         private static string CreateCalendarString(int year) =>
