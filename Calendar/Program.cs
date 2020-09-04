@@ -59,23 +59,6 @@ namespace Calendar
                 .SelectMany(Functional.Identity)
                 .JoinString(Environment.NewLine);
 
-        public static IEnumerable<IEnumerable<T>> Transpose<T>(IEnumerable<IEnumerable<T>> source)
-        {
-            var enumerators = source.Select(e => e.GetEnumerator()).ToArray();
-            try
-            {
-                while (enumerators.All(e => e.MoveNext()))
-                {
-                    yield return enumerators.Select(e => e.Current).ToArray();
-                }
-            }
-            finally
-            {
-                Array.ForEach(enumerators, e => e.Dispose());
-            }
-        }
-
-
         private static IEnumerable<string> JoinLine(IEnumerable<IEnumerable<string>> transposed)
             => transposed.Select(t => string.Join(' ', t));
 
