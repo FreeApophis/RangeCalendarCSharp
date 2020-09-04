@@ -36,7 +36,10 @@ namespace Calendar
     {
         static void Main(string[] args)
         {
+            CultureInfo.CurrentCulture = new CultureInfo("es");
+
             Console.WriteLine($"{CultureInfo.CurrentCulture.NativeName}");
+            Console.WriteLine($"{CalendarYear(args)}");
             Console.WriteLine(CreateCalendarString(CalendarYear(args)));
         }
 
@@ -99,7 +102,7 @@ namespace Calendar
             => WeekDays()
                 .OrderBy(NthDayOfWeek)
                 .Select(ToShortestDayName)
-                .Aggregate(string.Empty, (s, d) => s = s + " " + d);
+                .Aggregate(string.Empty, (s, d) => s = s + $"{d,3}");
 
         private static IEnumerable<DayOfWeek> WeekDays()
             => Enum
