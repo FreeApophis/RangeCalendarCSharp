@@ -21,6 +21,9 @@ namespace Calendar
             Console.WriteLine(CreateCalendarString(CalendarYear(args)));
         }
 
+        const int DayWidth = 4;
+        const int HorizontalMonths = 3;
+
         private static int CalendarYear(string[] args) =>
             args
                 .WhereSelect(cli => cli.TryParseInt())
@@ -31,7 +34,7 @@ namespace Calendar
             DaysInYear(year)
                 .GroupAdjacent(d => d.Month)
                 .Select(LayoutMonth)
-                .Batch(3)
+                .Batch(HorizontalMonths)
                 .Select(m => m.Transpose())
                 .Select(JoinLine)
                 .SelectMany(Functional.Identity)
@@ -46,17 +49,17 @@ namespace Calendar
                 .Concat(month.GroupBy(d => GetWeekOfYear(d)).Select(FormatWeek))
                 .Concat($"{string.Empty,21}".ToEnumerable());
 
-        private static string FormatWeek(IGrouping<object, DateTime> week) 
+        private static string FormatWeek(IGrouping<object, DateTime> week)
             => $"{AggregateWeek(week),21}";
 
-        private static StringBuilder AggregateWeek(IGrouping<object, DateTime> week) 
-            => week.Aggregate(new StringBuilder(new string(' ', 3 * NthDayOfWeek(week.First().DayOfWeek))), (r, day) => r.AppendFormat("{0,3}", day.Day));
+        private static StringBuilder AggregateWeek(IGrouping<object, DateTime> week)
+            => week.Aggregate(new StringBuilder(new string(' ', DayWidth * NthDayOfWeek(week.First().DayOfWeek))), (r, day) => r.Append($"{day.Day,DayWidth}"));
 
         private static string WeekDayLine()
             => WeekDays()
                 .OrderBy(NthDayOfWeek)
                 .Select(ToShortestDayName)
-                .Aggregate(new StringBuilder(), (s, d) => s.Append($"{d,3}"))
+                .Aggregate(new StringBuilder(), (s, d) => s.Append($"{d,DayWidth}"))
                 .ToString();
 
         private static IEnumerable<DayOfWeek> WeekDays()
