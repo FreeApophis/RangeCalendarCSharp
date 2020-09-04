@@ -36,13 +36,7 @@ namespace Calendar
     {
         static void Main(string[] args)
         {
-            var cultureInfo = CultureInfo.CurrentCulture;
-
-            Console.WriteLine(cultureInfo.Name);
-            Console.WriteLine(cultureInfo.NativeName);
-            Console.WriteLine(cultureInfo.DateTimeFormat.CalendarWeekRule);
-            Console.WriteLine(cultureInfo.DateTimeFormat.FirstDayOfWeek);
-
+            Console.WriteLine($"{CultureInfo.CurrentCulture.NativeName}");
             Console.WriteLine(CreateCalendarString(CalendarYear(args)));
         }
 
@@ -85,12 +79,12 @@ namespace Calendar
         private static IEnumerable<string> LayoutMonth(IEnumerable<DateTime> month)
         {
             yield return MonthName(month);
-            yield return WeekDays();
+            yield return WeekDayLine();
 
             foreach (var week in month.GroupBy(d => GetWeekOfYear(d)))
             {
                 var stringBuilder = new StringBuilder();
-                week.FirstOrNone().AndThen(d => stringBuilder.Append(new string(' ', 3 * (int)d.DayOfWeek)));
+                week.FirstOrNone().AndThen(d => stringBuilder.Append(new string(' ', 3 * NthDayOfWeek(d.DayOfWeek))));
 
                 var result = week.Aggregate(stringBuilder,
                     (r, day) => r.AppendFormat("{0,3}", day.Day));
@@ -101,15 +95,24 @@ namespace Calendar
             yield return $"{string.Empty,21}";
         }
 
-        // use ShortestDayNames
-        // https://docs.microsoft.com/en-us/dotnet/api/system.globalization.datetimeformatinfo.shortestdaynames?view=netcore-3.1
-
-        private static string WeekDays()
-            => Enum
-                .GetValues(typeof(DayOfWeek))
-                .Cast<DayOfWeek>()
+        private static string WeekDayLine()
+            => WeekDays()
+                .OrderBy(NthDayOfWeek)
                 .Select(ToShortestDayName)
                 .Aggregate(string.Empty, (s, d) => s = s + " " + d);
+
+        private static IEnumerable<DayOfWeek> WeekDays()
+            => Enum
+                .GetValues(typeof(DayOfWeek))
+                .Cast<DayOfWeek>();
+
+        private static int LengthOfWeek()
+            => WeekDays()
+                .Count();
+
+        private static int NthDayOfWeek(DayOfWeek dayOfWeek)
+            => (dayOfWeek + LengthOfWeek() - CultureInfo.CurrentCulture.DateTimeFormat.FirstDayOfWeek) % LengthOfWeek();
+
 
         private static string ToShortestDayName(DayOfWeek dayOfWeek)
             => CultureInfo.CurrentCulture.DateTimeFormat.GetShortestDayName(dayOfWeek);
@@ -118,13 +121,8 @@ namespace Calendar
         {
             // Gets the Calendar instance associated with a CultureInfo.
             CultureInfo cultureInfo = new CultureInfo("en-US");
-            System.Globalization.Calendar calendar = cultureInfo.Calendar;
 
-            // Gets the DTFI properties required by GetWeekOfYear.
-            CalendarWeekRule calendarWeekRule = cultureInfo.DateTimeFormat.CalendarWeekRule;
-            DayOfWeek dayOfWeek = cultureInfo.DateTimeFormat.FirstDayOfWeek;
-
-            return calendar.GetWeekOfYear(dateTime, calendarWeekRule, dayOfWeek);
+            return CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(dateTime, CultureInfo.CurrentCulture.DateTimeFormat.CalendarWeekRule, CultureInfo.CurrentCulture.DateTimeFormat.FirstDayOfWeek);
         }
 
         private static string MonthName(IEnumerable<DateTime> month) =>
