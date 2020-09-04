@@ -6,6 +6,7 @@ using System.Globalization;
 using System.Text;
 using Funcky;
 using MoreLinq;
+using System.Runtime.CompilerServices;
 
 namespace Calendar
 {
@@ -27,8 +28,8 @@ namespace Calendar
             }
         }
 
-        public static string JoinString(this IEnumerable<string> source)
-            => string.Join(Environment.NewLine, source);
+        public static string JoinString(this IEnumerable<string> source, string delimiter)
+            => string.Join(delimiter, source);
     }
 
     class Program
@@ -56,10 +57,10 @@ namespace Calendar
                 .GroupAdjacent(d => d.Month)
                 .Select(LayoutMonth)
                 .Chunk(3)
-                .Select(Transpose)
+                .Select(m => m.Transpose())
                 .Select(JoinLine)
                 .SelectMany(Functional.Identity)
-                .JoinString();
+                .JoinString(Environment.NewLine);
 
         public static IEnumerable<IEnumerable<T>> Transpose<T>(IEnumerable<IEnumerable<T>> source)
         {
@@ -84,7 +85,7 @@ namespace Calendar
         private static IEnumerable<string> LayoutMonth(IEnumerable<DateTime> month)
         {
             yield return MonthName(month);
-            yield return Week();
+            yield return WeekDays();
 
             foreach (var week in month.GroupBy(d => GetWeekOfYear(d)))
             {
@@ -103,8 +104,15 @@ namespace Calendar
         // use ShortestDayNames
         // https://docs.microsoft.com/en-us/dotnet/api/system.globalization.datetimeformatinfo.shortestdaynames?view=netcore-3.1
 
-        private static string Week()
-            => " Su Mo Tu We Th Fr Sa";
+        private static string WeekDays()
+            => Enum
+                .GetValues(typeof(DayOfWeek))
+                .Cast<DayOfWeek>()
+                .Select(ToShortestDayName)
+                .Aggregate(string.Empty, (s, d) => s = s + " " + d);
+
+        private static string ToShortestDayName(DayOfWeek dayOfWeek)
+            => CultureInfo.CurrentCulture.DateTimeFormat.GetShortestDayName(dayOfWeek);
 
         private static object GetWeekOfYear(in DateTime dateTime)
         {
@@ -127,7 +135,7 @@ namespace Calendar
 
         private static IEnumerable<DateTime> DaysInYear(int year)
         {
-            var endDay = new DateTime(year + 1 1, 1);
+            var endDay = new DateTime(year + 1, 1, 1);
             var day = new DateTime(year, 1, 1);
 
             while (day < endDay)
