@@ -2,7 +2,7 @@
 
 namespace Calendar
 {
-    static class Extensions
+    internal static class Extensions
     {
         public static string JoinString(this IEnumerable<string> source, string delimiter)
             => string.Join(delimiter, source);
