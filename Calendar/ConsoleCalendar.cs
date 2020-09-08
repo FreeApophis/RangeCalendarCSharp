@@ -24,8 +24,7 @@ namespace Calendar
                 .Select(MonthLayouter.DefaultLayout)
                 .Batch(HorizontalMonths)
                 .Select(m => m.Transpose())
-                .Select(JoinLine)
-                .SelectMany(Functional.Identity);
+                .SelectMany(JoinLine);
 
         private static IEnumerable<DateTime> GetDays(int fromYear, Option<int> toYear = default)
             => MoreEnumerable
