@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -9,8 +10,10 @@ namespace Calendar
 {
     internal class MonthLayouter
     {
-        private const int DayWidth = 3;
-        const int DaysInAWeek = 7;
+        private const int RowSeparationSpace = 1;
+        private const int MinDayWidth = 3;
+        private const int DaysInAWeek = 7;
+        private const char SpaceCharacter = ' ';
         const string MonthFormat = "MMMM";
 
         public static IEnumerable<string> DefaultLayout(IEnumerable<DateTime> month)
@@ -19,40 +22,43 @@ namespace Calendar
                 .Add(MonthName(month))
                 .Add(WeekDayLine())
                 .AddRange(month.GroupBy(d => GetWeekOfYear(d)).Select(FormatWeek))
-                .Add($"{string.Empty,DayWidth * DaysInAWeek}");
+                .Add(Spaces(WidthOfWeek()));
 
         private static string MonthName(IEnumerable<DateTime> month)
             => month
                 .Select(d => d.ToString(MonthFormat))
                 .First()
-                .Center(DayWidth * DaysInAWeek);
+                .Center(WidthOfWeek());
 
         private static string FormatWeek(IGrouping<object, DateTime> week)
-            => $"{AggregateWeek(week),DayWidth * DaysInAWeek}";
+            => PadWeek(AggregateWeek(week), week);
 
-        private static StringBuilder AggregateWeek(IGrouping<object, DateTime> week)
+        private static string AggregateWeek(IGrouping<object, DateTime> week)
             => week
-                .Select(DayOfTheMonth)
-                .Aggregate(new StringBuilder(Indent(week)), AggregateDays);
+                .Aggregate(new StringBuilder(), AggregateDays)
+                .ToString();
 
-        private static string DayOfTheMonth(DateTime day)
-            => $"{day.Day}";
+        private static StringBuilder AggregateDays(StringBuilder aggregate, DateTime day)
+            => aggregate.Append(FormatDay(day));
 
-        private static string Indent(IGrouping<object, DateTime> week)
-            => new string(' ', DayWidth * MissingFrontDays(week));
-
-        private static int MissingFrontDays(IGrouping<object, DateTime> week)
-            => NthDayOfWeek(week.First().DayOfWeek);
+        private static string FormatDay(DateTime day)
+            => day
+                .Day
+                .ToString()
+                .PadLeft(WidthOfWeekDay(day.DayOfWeek));
 
         private static string WeekDayLine()
             => WeekDays()
                 .OrderBy(NthDayOfWeek)
-                .Select(ToShortestDayName)
-                .Aggregate(new StringBuilder(), AggregateDays)
+                .Aggregate(new StringBuilder(), AggregateWeekDays)
                 .ToString();
 
-        private static StringBuilder AggregateDays(StringBuilder aggregate, string day)
-            => aggregate.Append($"{day,DayWidth}");
+        private static StringBuilder AggregateWeekDays(StringBuilder aggregate, DayOfWeek day)
+            => aggregate.Append(FormattedWeekDay(day));
+
+        private static string FormattedWeekDay(DayOfWeek day)
+            => ToShortestDayName(day)
+                .PadLeft(WidthOfWeekDay(day));
 
         private static IEnumerable<DayOfWeek> WeekDays()
             => Enum
@@ -70,5 +76,23 @@ namespace Calendar
 
         private static DateTimeFormatInfo CurrentDateTimeFormat
             => CultureInfo.CurrentCulture.DateTimeFormat;
+
+        private static int WidthOfWeek()
+            => WeekDays()
+                .Sum(WidthOfWeekDay);
+
+        private static int WidthOfWeekDay(DayOfWeek day) =>
+            Math.Max(ToShortestDayName(day).Length + RowSeparationSpace, MinDayWidth);
+
+        private static string Spaces(int width)
+            => new string(SpaceCharacter, width);
+
+        private static string PadWeek(string formattedWeek, IGrouping<object, DateTime> week)
+            => StartsOnFirstDayOfWeek(week)
+                ? formattedWeek.PadRight(WidthOfWeek())
+                : formattedWeek.PadLeft(WidthOfWeek());
+
+        private static bool StartsOnFirstDayOfWeek(IGrouping<object, DateTime> week)
+            => NthDayOfWeek(week.First().DayOfWeek) == 0;
     }
 }
