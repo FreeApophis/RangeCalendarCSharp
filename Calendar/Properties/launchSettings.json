@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Calendar": {
+      "commandName": "Project",
+      "commandLineArgs": "hu"
+    }
+  }
+}
