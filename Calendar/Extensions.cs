@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Drawing;
+using Pastel;
 
 namespace Calendar
 {
@@ -14,5 +16,15 @@ namespace Calendar
                 1 => $" {text}",
                 _ => Center($" {text} ", width),
             };
+
+        public static string Colorize(this string input, Color color)
+            => color != Color.Transparent && ColorService.Fancy
+                ? input.Pastel(color)
+                : input;
+
+        public static string ColorizeBg(this string input, Color color)
+            => color != Color.Transparent && ColorService.Fancy
+                ? input.PastelBg(color)
+                : input;
     }
 }
