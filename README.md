@@ -1,8 +1,18 @@
 # RangeCalendarCSharp
 
-This creates the famous functional calendar page in C#
+This creates the famous functional calendar page in C#.
+
+It started as a simple port but ended in adding more and more features and influencing the [Funcky](https://github.com/polyadic/funcky/) functional library.
+
+This calendar handles a lot of the cultural differences between calendars
+* it correctly handles start of week
+* we localize the months and weekdays 
+* we can display weekend and holidays by country
 
 ## The C++ range-v3 implementation by Eric Niebler
+
+This talk was inspired by the [Component programming with ranges](https://wiki.dlang.org/Component_programming_with_ranges) on the D language wiki.
+
 
 * https://www.youtube.com/watch?v=mFUXNMfaciE
 * https://github.com/ericniebler/range-v3/blob/master/example/calendar.cpp
@@ -18,47 +28,63 @@ This creates the famous functional calendar page in C#
 
 * https://github.com/ast-al/rangeless/blob/gh-pages/test/calendar.cpp
 
+## Features
+
+* Accepts a number, this is interpreted as the `year` of the calendar
+* Accepts Cultures as `en-GB` or `hu-HU` to localize the calendar correctly (no invariant cultures)
+* Add the parameter `stream` to have an endless stream starting with year
+* Add the parameter `fancy` to colorize the output, weekends are red, holidays have a redish backround.
+
+## The functional magic
+
+The code is very generic and has almost no code to treat special cases. The code has 264 Lines of Codes of which 72 are executable. No function has cyclomatic complexity of more than 2!
+
+* It's mostly pure functional with a little global state which you can define via the console. (You could certainly hide that better)
+* The .NET CultureInfo classes give information on dates: weekday, month, weeknumber and also when a week starts.
+* The .NET CultureInfo classes also have the localized names for months and week days
+* For Weekend and Holiday calculation we use the library [Nager.Date](https://github.com/nager/Nager.Date)
+
 ## The current result of the Program
 
-### en
+### en-GB
 
 ```
-       January               February               March
+     January 2020         February 2020           March 2020
  Su Mo Tu We Th Fr Sa  Su Mo Tu We Th Fr Sa  Su Mo Tu We Th Fr Sa
            1  2  3  4                     1   1  2  3  4  5  6  7
   5  6  7  8  9 10 11   2  3  4  5  6  7  8   8  9 10 11 12 13 14
  12 13 14 15 16 17 18   9 10 11 12 13 14 15  15 16 17 18 19 20 21
  19 20 21 22 23 24 25  16 17 18 19 20 21 22  22 23 24 25 26 27 28
-    26 27 28 29 30 31  23 24 25 26 27 28 29              29 30 31
+ 26 27 28 29 30 31     23 24 25 26 27 28 29  29 30 31
 
-        April                  May                   June
+      April 2020             May 2020             June 2020
  Su Mo Tu We Th Fr Sa  Su Mo Tu We Th Fr Sa  Su Mo Tu We Th Fr Sa
            1  2  3  4                  1  2      1  2  3  4  5  6
   5  6  7  8  9 10 11   3  4  5  6  7  8  9   7  8  9 10 11 12 13
  12 13 14 15 16 17 18  10 11 12 13 14 15 16  14 15 16 17 18 19 20
  19 20 21 22 23 24 25  17 18 19 20 21 22 23  21 22 23 24 25 26 27
-       26 27 28 29 30  24 25 26 27 28 29 30              28 29 30
-                                         31
+ 26 27 28 29 30        24 25 26 27 28 29 30  28 29 30
+                       31
 
-         July                 August              September
+      July 2020            August 2020          September 2020
  Su Mo Tu We Th Fr Sa  Su Mo Tu We Th Fr Sa  Su Mo Tu We Th Fr Sa
            1  2  3  4                     1         1  2  3  4  5
   5  6  7  8  9 10 11   2  3  4  5  6  7  8   6  7  8  9 10 11 12
  12 13 14 15 16 17 18   9 10 11 12 13 14 15  13 14 15 16 17 18 19
  19 20 21 22 23 24 25  16 17 18 19 20 21 22  20 21 22 23 24 25 26
-    26 27 28 29 30 31  23 24 25 26 27 28 29           27 28 29 30
-                                      30 31
+ 26 27 28 29 30 31     23 24 25 26 27 28 29  27 28 29 30
+                       30 31
 
-       October               November              December
+     October 2020         November 2020         December 2020
  Su Mo Tu We Th Fr Sa  Su Mo Tu We Th Fr Sa  Su Mo Tu We Th Fr Sa
               1  2  3   1  2  3  4  5  6  7         1  2  3  4  5
   4  5  6  7  8  9 10   8  9 10 11 12 13 14   6  7  8  9 10 11 12
  11 12 13 14 15 16 17  15 16 17 18 19 20 21  13 14 15 16 17 18 19
  18 19 20 21 22 23 24  22 23 24 25 26 27 28  20 21 22 23 24 25 26
- 25 26 27 28 29 30 31                 29 30        27 28 29 30 31
+ 25 26 27 28 29 30 31  29 30                 27 28 29 30 31
 ```
 
-### 2021 de
+### 2021 de-CH
 
 ```
         Januar               Februar                 März
@@ -96,10 +122,10 @@ This creates the famous functional calendar page in C#
  25 26 27 28 29 30 31                 29 30        27 28 29 30 31
 ```
 
-### 2000 ru
+### 2000 ru-RU
 
 ```
-        Январь               Февраль                 Март
+     Январь 2020           Февраль 2020           Март 2020
  Пн Вт Ср Чт Пт Сб Вс  Пн Вт Ср Чт Пт Сб Вс  Пн Вт Ср Чт Пт Сб Вс
                  1  2      1  2  3  4  5  6         1  2  3  4  5
   3  4  5  6  7  8  9   7  8  9 10 11 12 13   6  7  8  9 10 11 12
@@ -108,7 +134,7 @@ This creates the famous functional calendar page in C#
  24 25 26 27 28 29 30                 28 29        27 28 29 30 31
                    31
 
-        Апрель                 Май                   Июнь
+    Апрель 2020             Май 2020             Июнь 2020
  Пн Вт Ср Чт Пт Сб Вс  Пн Вт Ср Чт Пт Сб Вс  Пн Вт Ср Чт Пт Сб Вс
                  1  2   1  2  3  4  5  6  7            1  2  3  4
   3  4  5  6  7  8  9   8  9 10 11 12 13 14   5  6  7  8  9 10 11
@@ -116,7 +142,7 @@ This creates the famous functional calendar page in C#
  17 18 19 20 21 22 23  22 23 24 25 26 27 28  19 20 21 22 23 24 25
  24 25 26 27 28 29 30              29 30 31        26 27 28 29 30
 
-         Июль                 Август               Сентябрь
+      Июль 2020            Август 2020          Сентябрь 2020
  Пн Вт Ср Чт Пт Сб Вс  Пн Вт Ср Чт Пт Сб Вс  Пн Вт Ср Чт Пт Сб Вс
                  1  2      1  2  3  4  5  6               1  2  3
   3  4  5  6  7  8  9   7  8  9 10 11 12 13   4  5  6  7  8  9 10
@@ -125,7 +151,7 @@ This creates the famous functional calendar page in C#
  24 25 26 27 28 29 30           28 29 30 31     25 26 27 28 29 30
                    31
 
-       Октябрь                Ноябрь               Декабрь
+    Октябрь 2020          Ноябрь 2020           Декабрь 2020
  Пн Вт Ср Чт Пт Сб Вс  Пн Вт Ср Чт Пт Сб Вс  Пн Вт Ср Чт Пт Сб Вс
                     1         1  2  3  4  5               1  2  3
   2  3  4  5  6  7  8   6  7  8  9 10 11 12   4  5  6  7  8  9 10
