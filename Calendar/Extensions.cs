@@ -18,13 +18,17 @@ namespace Calendar
             };
 
         public static string Colorize(this string input, Color color)
-            => color != Color.Transparent && ColorService.Fancy
+            => ShouldColorize(color)
                 ? input.Pastel(color)
                 : input;
 
         public static string ColorizeBg(this string input, Color color)
-            => color != Color.Transparent && ColorService.Fancy
+            => ShouldColorize(color)
                 ? input.PastelBg(color)
                 : input;
+
+        private static bool ShouldColorize(Color color)
+            => color != Color.Transparent && ColorService.Fancy;
+
     }
 }
