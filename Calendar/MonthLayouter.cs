@@ -14,7 +14,7 @@ namespace Calendar
         private const int MinDayWidth = 3;
         private const int DaysInAWeek = 7;
         private const char SpaceCharacter = ' ';
-        const string MonthFormat = "MMMM";
+        const string MonthFormat = "MMMM yyyy";
 
         public static IEnumerable<string> DefaultLayout(IEnumerable<DateTime> month)
             => ImmutableList
@@ -24,11 +24,12 @@ namespace Calendar
                 .AddRange(month.GroupBy(d => GetWeekOfYear(d)).Select(FormatWeek))
                 .Add(Spaces(WidthOfWeek()));
 
-        private static string MonthName(IEnumerable<DateTime> month)
-            => month
+        private static string MonthName(IEnumerable<DateTime> month) =>
+            month
                 .Select(d => d.ToString(MonthFormat))
                 .First()
-                .Center(WidthOfWeek());
+                .Center(WidthOfWeek())
+                .Colorize(Color.White);
 
         private static string FormatWeek(IGrouping<object, DateTime> week)
             => PadWeek(AggregateWeek(week), week);
@@ -45,7 +46,9 @@ namespace Calendar
             => day
                 .Day
                 .ToString()
-                .PadLeft(WidthOfWeekDay(day.DayOfWeek));
+                .PadLeft(WidthOfWeekDay(day.DayOfWeek))
+                .Colorize(ColorService.WeekDayColor(day.DayOfWeek))
+                .ColorizeBg(ColorService.DayColor(day));
 
         private static string WeekDayLine()
             => WeekDays()
@@ -58,7 +61,8 @@ namespace Calendar
 
         private static string FormattedWeekDay(DayOfWeek day)
             => ToShortestDayName(day)
-                .PadLeft(WidthOfWeekDay(day));
+                .PadLeft(WidthOfWeekDay(day))
+                .Colorize(ColorService.WeekDayColor(day));
 
         private static IEnumerable<DayOfWeek> WeekDays()
             => Enum
@@ -89,8 +93,20 @@ namespace Calendar
 
         private static string PadWeek(string formattedWeek, IGrouping<object, DateTime> week)
             => StartsOnFirstDayOfWeek(week)
-                ? formattedWeek.PadRight(WidthOfWeek())
-                : formattedWeek.PadLeft(WidthOfWeek());
+                ? formattedWeek + Spaces(EndOfWeekSpaces(week.Count()))
+                : Spaces(BeginOfWeekSpaces(DaysInAWeek - week.Count())) + formattedWeek;
+
+        private static int EndOfWeekSpaces(int skipDays)
+            => WeekDays()
+                .OrderBy(NthDayOfWeek)
+                .Skip(skipDays)
+                .Sum(WidthOfWeekDay);
+
+        private static int BeginOfWeekSpaces(int takeDays)
+            => WeekDays()
+                .OrderBy(NthDayOfWeek)
+                .Take(takeDays)
+                .Sum(WidthOfWeekDay);
 
         private static bool StartsOnFirstDayOfWeek(IGrouping<object, DateTime> week)
             => NthDayOfWeek(week.First().DayOfWeek) == 0;
