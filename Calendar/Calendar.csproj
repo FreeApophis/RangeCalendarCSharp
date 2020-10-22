@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -6,8 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Funcky" Version="2.2.0" />
-    <PackageReference Include="morelinq" Version="3.3.2" />
+    <PackageReference Include="Funcky" Version="2.3.0-beta.1" />
     <PackageReference Include="Nager.Date" Version="1.26.3" />
     <PackageReference Include="Pastel" Version="1.3.2" />
   </ItemGroup>
