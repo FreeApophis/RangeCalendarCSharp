@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Funcky;
+using Funcky.Extensions;
 using Funcky.Monads;
-using MoreLinq;
 
 namespace Calendar
 {
@@ -19,14 +20,14 @@ namespace Calendar
 
         private static IEnumerable<string> ArrangeCalendarPage(int year, Func<int, IEnumerable<DateTime>> dayEnumerator)
             => dayEnumerator(year)
-                .GroupAdjacent(ByMonth)
+                .AdjacentGroupBy(ByMonth)
                 .Select(MonthLayouter.DefaultLayout)
-                .Batch(HorizontalMonths)
+                .Chunk(HorizontalMonths)
                 .Select(m => m.Transpose())
                 .SelectMany(JoinLine);
 
         private static IEnumerable<DateTime> GetDays(int fromYear, Option<int> toYear = default)
-            => MoreEnumerable
+            => Sequence
                 .Generate(new DateTime(fromYear, 1, 1), day => day + new TimeSpan(1, 0, 0, 0))
                 .TakeWhile(day => toYear.Match(true, year => day < new DateTime(year + 1, 1, 1)));
 
