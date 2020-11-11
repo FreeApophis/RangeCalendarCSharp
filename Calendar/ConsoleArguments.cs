@@ -26,6 +26,7 @@ namespace Calendar
 
 
         private static Option<T> SelectArgument<T>(string[] args, Func<string, Option<T>> selector)
+            where T : notnull
             => args
                 .WhereSelect(selector)
                 .FirstOrNone();
