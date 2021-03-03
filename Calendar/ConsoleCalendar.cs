@@ -10,22 +10,15 @@ namespace Calendar
     internal class ConsoleCalendar
     {
         private const int HorizontalMonths = 3;
+        private static readonly Func<char, IEnumerable<string>, string> Join = string.Join;
 
-        internal static string SingleYear(int year)
-            => ArrangeCalendarPage(year, year => GetDays(year, Option.Some(year)))
-                .JoinString(Environment.NewLine);
-
-        internal static IEnumerable<string> Stream(int year)
-            => ArrangeCalendarPage(year, year => GetDays(year));
-
-        private static IEnumerable<string> ArrangeCalendarPage(int year, Func<int, IEnumerable<DateTime>> dayEnumerator)
-            => dayEnumerator(year)
+        public static IEnumerable<string> ArrangeCalendarPage(int year, Option<Unit> stream)
+            => GetDays(year, stream.AndThen(_ => year))
                 .AdjacentGroupBy(ByMonth)
-                .Select(MonthLayouter.DefaultLayout)
+                .Select(MonthLayout.Default)
                 .Chunk(HorizontalMonths)
                 .Select(m => m.Transpose())
                 .SelectMany(JoinLine);
-
         private static IEnumerable<DateTime> GetDays(int fromYear, Option<int> toYear = default)
             => Sequence
                 .Generate(new DateTime(fromYear, 1, 1), day => day + new TimeSpan(1, 0, 0, 0))
@@ -35,6 +28,6 @@ namespace Calendar
             => date.Month;
 
         private static IEnumerable<string> JoinLine(IEnumerable<IEnumerable<string>> lines)
-            => lines.Select(line => string.Join(' ', line));
+            => lines.Select(Join.Curry()(' '));
     }
 }

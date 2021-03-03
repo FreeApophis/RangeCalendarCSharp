@@ -1,31 +1,31 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using Funcky;
 using Funcky.Extensions;
 using Funcky.Monads;
 using System.Linq;
 using Nager.Date;
-using static Funcky.Functional;
 
 namespace Calendar
 {
     internal static class ConsoleArguments
     {
-        public static int GetCalendarYear(string[] args)
-            => SelectArgument(args, ParseExtensions.TryParseInt)
+        public static int GetCalendarYear(IEnumerable<string> args)
+            => SelectArgument(args, ParseExtensions.ParseIntOrNone)
                 .GetOrElse(DateTime.Now.Year);
 
-        public static Option<CultureInfo> GetCultureInfo(string[] args)
+        public static Option<CultureInfo> GetCultureInfo(IEnumerable<string> args)
             => SelectArgument(args, ToCultureInfo);
 
-        public static Option<Unit> GetStreamingMode(string[] args)
-            => SelectArgument(args, Curry<string, string, Option<Unit>>(HasArgument)("stream"));
+        public static Option<Unit> GetStreamingMode(IEnumerable<string> args)
+            => SelectArgument(args, HasArgument("stream"));
 
-        public static Option<Unit> GetFancyMode(string[] args)
-            => SelectArgument(args, Curry<string, string, Option<Unit>>(HasArgument)("fancy"));
+        public static Option<Unit> GetFancyMode(IEnumerable<string> args)
+            => SelectArgument(args, HasArgument("fancy"));
 
 
-        private static Option<T> SelectArgument<T>(string[] args, Func<string, Option<T>> selector)
+        private static Option<T> SelectArgument<T>(IEnumerable<string> args, Func<string, Option<T>> selector)
             where T : notnull
             => args
                 .WhereSelect(selector)
@@ -37,14 +37,15 @@ namespace Calendar
                 .Where(culture => culture.Name == cultureString)
                 .FirstOrNone();
 
-        private static Option<Unit> HasArgument(string givenArgument, string argument)
-            => argument == givenArgument
-                ? Option.Some(Unit.Value)
-                : Option<Unit>.None();
+        private static Func<string, Option<Unit>> HasArgument(string givenArgument)
+            => argument
+                => argument == givenArgument
+                    ? Option.Some(Unit.Value)
+                    : Option<Unit>.None();
 
         public static CountryCode CountryFromCulture()
             => TwoLetterIsoRegionNameFromCulture()
-                .TryParseEnum<CountryCode>()
+                .ParseEnumOrNone<CountryCode>()
                 .GetOrElse(() => throw new Exception("ooops unknown country code???"));
 
         private static string TwoLetterIsoRegionNameFromCulture()
