@@ -11,7 +11,6 @@ using static Funcky.Functional;
 namespace Calendar
 {
     public delegate string ColorizeString(string input, Color color);
-    public delegate bool ColorizePredicate(Color color);
 
     internal class Program
     {
@@ -20,19 +19,16 @@ namespace Calendar
             GetCultureInfo(args)
                 .AndThen(cultureInfo => CultureInfo.CurrentCulture = cultureInfo);
 
-            ArrangeCalendarPage(args, ShouldColorize(args))
+            ArrangeCalendarPage(args)
                 .ForEach(Console.WriteLine);
         }
 
-        private static IEnumerable<string> ArrangeCalendarPage(string[] args, ColorizePredicate shouldColorize)
+        private static IEnumerable<string> ArrangeCalendarPage(string[] args)
             => CompositionRoot(
                 GetCalendarYear(args),
                 EndYear(args),
-                Extensions.Colorize(shouldColorize),
-                Extensions.ColorizeBg(shouldColorize));
-
-        private static ColorizePredicate ShouldColorize(IEnumerable<string> args)
-            => Extensions.ShouldColorize(Should(GetFancyMode(args)));
+                Extensions.Colorize(Should(GetFancyMode(args))),
+                Extensions.ColorizeBg(Should(GetFancyMode(args))));
 
         private static IEnumerable<string> CompositionRoot(int year, Option<int> endYear, ColorizeString colorizeString, ColorizeString colorizeStringBackground)
             => ConsoleCalendar
