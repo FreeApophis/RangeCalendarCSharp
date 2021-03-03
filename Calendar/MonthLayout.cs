@@ -43,13 +43,11 @@ namespace Calendar
             => month
                 => colorizeString(CenterMonth(month), Color.White);
 
-        private static string CenterMonth(IEnumerable<DateTime> month)
-        {
-            return month
+        private static string CenterMonth(IEnumerable<DateTime> month) 
+            => month
                 .Select(MonthString)
                 .First()
                 .Center(WidthOfWeek());
-        }
 
         private static string MonthString(DateTime day)
             => day
