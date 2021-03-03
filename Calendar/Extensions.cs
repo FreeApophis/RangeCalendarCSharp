@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using System.Drawing;
 using Pastel;
 
@@ -14,18 +14,21 @@ namespace Calendar
                 _ => Center($" {text} ", width),
             };
 
-        public static string Colorize(this string input, Color color)
-            => ShouldColorize(color)
-                ? input.Pastel(color)
-                : input;
+        public static ColorizeString Colorize(ColorizePredicate shouldColorize)
+            => (input, color)
+                => shouldColorize(color)
+                    ? input.Pastel(color)
+                    : input;
 
-        public static string ColorizeBg(this string input, Color color)
-            => ShouldColorize(color)
+        public static ColorizeString ColorizeBg(ColorizePredicate shouldColorize)
+            => (input, color)
+            => shouldColorize(color)
                 ? input.PastelBg(color)
                 : input;
 
-        private static bool ShouldColorize(Color color)
-            => color != Color.Transparent && ColorService.Fancy;
+        public static ColorizePredicate ShouldColorize(bool fancy)
+            => color
+                => color != Color.Transparent && fancy;
 
     }
 }

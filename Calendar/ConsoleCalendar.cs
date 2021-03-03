@@ -12,13 +12,14 @@ namespace Calendar
         private const int HorizontalMonths = 3;
         private static readonly Func<char, IEnumerable<string>, string> Join = string.Join;
 
-        public static IEnumerable<string> ArrangeCalendarPage(int year, Option<Unit> stream)
-            => GetDays(year, stream.AndThen(_ => year))
+        public static IEnumerable<string> ArrangeCalendarPage(Func<IEnumerable<DateTime>, IEnumerable<string>> monthLayout, int year, Option<int> endYear)
+            => GetDays(year, endYear)
                 .AdjacentGroupBy(ByMonth)
-                .Select(MonthLayout.Default)
+                .Select(monthLayout)
                 .Chunk(HorizontalMonths)
                 .Select(m => m.Transpose())
                 .SelectMany(JoinLine);
+
         private static IEnumerable<DateTime> GetDays(int fromYear, Option<int> toYear = default)
             => Sequence
                 .Generate(new DateTime(fromYear, 1, 1), day => day + new TimeSpan(1, 0, 0, 0))
