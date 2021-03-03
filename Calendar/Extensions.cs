@@ -14,21 +14,16 @@ namespace Calendar
                 _ => Center($" {text} ", width),
             };
 
-        public static ColorizeString Colorize(ColorizePredicate shouldColorize)
+        public static ColorizeString Colorize(bool fancy)
             => (input, color)
-                => shouldColorize(color)
+                => color != Color.Transparent && fancy
                     ? input.Pastel(color)
                     : input;
 
-        public static ColorizeString ColorizeBg(ColorizePredicate shouldColorize)
+        public static ColorizeString ColorizeBg(bool fancy)
             => (input, color)
-            => shouldColorize(color)
-                ? input.PastelBg(color)
-                : input;
-
-        public static ColorizePredicate ShouldColorize(bool fancy)
-            => color
-                => color != Color.Transparent && fancy;
-
+                => color != Color.Transparent && fancy
+                    ? input.PastelBg(color)
+                    : input;
     }
 }
