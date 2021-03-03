@@ -6,9 +6,6 @@ namespace Calendar
 {
     internal static class Extensions
     {
-        public static string JoinString(this IEnumerable<string> source, string delimiter)
-            => string.Join(delimiter, source);
-
         public static string Center(this string text, int width)
             => (width - text.Length) switch
             {

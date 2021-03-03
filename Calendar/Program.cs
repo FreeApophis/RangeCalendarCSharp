@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Globalization;
+using System.Linq;
 using Funcky;
 using Funcky.Extensions;
+using Funcky.Monads;
 using static Calendar.ConsoleArguments;
+using static Funcky.Functional;
 
 namespace Calendar
 {
@@ -16,15 +19,13 @@ namespace Calendar
             GetFancyMode(args)
                 .AndThen(_ => ColorService.Fancy = true);
 
-            GetStreamingMode(args)
-                .Match(PrintSingleYear(args), PrintStream(args));
-
+            ConsoleCalendar
+                .ArrangeCalendarPage(GetCalendarYear(args), ShouldStream(args))
+                .ForEach(Console.WriteLine);
         }
 
-        private static Action<Unit> PrintStream(string[] args) 
-            => _ => ConsoleCalendar.Stream(GetCalendarYear(args)).ForEach(Console.WriteLine);
+        private static Option<Unit> ShouldStream(string[] args)
+            => GetStreamingMode(args);
 
-        private static Action PrintSingleYear(string[] args)
-            => () => Console.WriteLine(ConsoleCalendar.SingleYear(GetCalendarYear(args)));
     }
 }
