@@ -7,8 +7,6 @@ namespace Calendar
 {
     class ColorService
     {
-        public static bool Fancy { get; set; } = false;
-
         public static Color WeekDayColor(DayOfWeek day)
             => IsWeekend(day)
                 ? Color.OrangeRed

@@ -15,7 +15,7 @@ namespace Calendar
             var arrangePage = ConsoleCalendar
                 .ArrangeCalendarPage(GetCalendarYear(args), EndYear(args));
 
-            arrangePage(GetFancy(args))
+            arrangePage(GetEnvironment(args))
                 .ForEach(Console.WriteLine);
         }
     }

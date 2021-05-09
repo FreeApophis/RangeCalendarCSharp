@@ -13,15 +13,19 @@ namespace Calendar
                 _ => Center($" {text} ", width),
             };
 
-        public static Reader<Fancy, string> Colorize(this string input, Color color)
+        public static Reader<Enviroment, string> Colorize(this string input, Color color)
                 => from shouldColorize in ShouldColorize(color)
-                   select shouldColorize ? input.Pastel(color) : input;
+                   select shouldColorize 
+                    ? input.Pastel(color) 
+                    : input;
 
-        public static Reader<Fancy, string> ColorizeBg(this string input, Color color)
+        public static Reader<Enviroment, string> ColorizeBg(this string input, Color color)
                 => from shouldColorize in ShouldColorize(color)
-                   select shouldColorize ? input.PastelBg(color) : input;
+                   select shouldColorize 
+                    ? input.PastelBg(color) 
+                    : input;
 
-        private static Reader<Fancy, bool> ShouldColorize(Color color)
+        private static Reader<Enviroment, bool> ShouldColorize(Color color)
             => fancy
                 => color != Color.Transparent && fancy.IsFancy;
 
