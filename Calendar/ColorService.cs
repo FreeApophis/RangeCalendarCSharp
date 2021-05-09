@@ -5,7 +5,7 @@ using Nager.Date;
 
 namespace Calendar
 {
-    class ColorService
+    internal class ColorService
     {
         public static Color WeekDayColor(DayOfWeek day)
             => IsWeekend(day)
