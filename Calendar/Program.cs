@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Globalization;
-using System.Linq;
-using Funcky;
 using Funcky.Extensions;
-using Funcky.Monads;
 using static Calendar.ConsoleArguments;
-using static Funcky.Functional;
 
 namespace Calendar
 {
@@ -16,16 +12,11 @@ namespace Calendar
             GetCultureInfo(args)
                 .AndThen(cultureInfo => CultureInfo.CurrentCulture = cultureInfo);
 
-            GetFancyMode(args)
-                .AndThen(_ => ColorService.Fancy = true);
+            var arrangePage = ConsoleCalendar
+                .ArrangeCalendarPage(GetCalendarYear(args), EndYear(args));
 
-            ConsoleCalendar
-                .ArrangeCalendarPage(GetCalendarYear(args), ShouldStream(args))
+            arrangePage(GetFancy(args))
                 .ForEach(Console.WriteLine);
         }
-
-        private static Option<Unit> ShouldStream(string[] args)
-            => GetStreamingMode(args);
-
     }
 }
