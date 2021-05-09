@@ -28,10 +28,10 @@ namespace Calendar
             this Reader<TEnvironment, TSource> source, Func<TSource, TResult> selector) =>
                 source.SelectMany(value => selector(value).Reader<TEnvironment, TResult>(), (value, result) => result);
 
-        public static Reader<TEnvironment, IEnumerable<TElement>> FlipMonad<TEnvironment, TElement>(this IEnumerable<Reader<TEnvironment, TElement>> input)
-            => fancy
-                => from e in input
-                   select e(fancy);
-
+        // Flip the inner (Reader) and outer (Sequence) monad => Apply Environment on each element
+        public static Reader<TEnvironment, IEnumerable<TElement>> FlipMonad<TEnvironment, TElement>(this IEnumerable<Reader<TEnvironment, TElement>> sequence)
+            => environment
+                => from element in sequence
+                   select element(environment);
     }
 }

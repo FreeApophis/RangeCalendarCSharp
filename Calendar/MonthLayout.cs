@@ -16,11 +16,14 @@ namespace Calendar
         private const char SpaceCharacter = ' ';
         const string MonthFormat = "MMMM yyyy";
 
-        public static Reader<Fancy, IEnumerable<string>> DefaultLayout(IEnumerable<DateTime> month)
+        public static Reader<Enviroment, IEnumerable<string>> DefaultLayout(IEnumerable<DateTime> month)
                 => from colorizedMonthName in ColorizedMonthName(month)
                    from weekDayLine in WeekDayLine()
-                   from weeks in month.GroupBy(d => GetWeekOfYear(d)).Select(w => FormatWeek(w)).FlipMonad()
-                   select BuildDefaultLayout(colorizedMonthName, weekDayLine, weeks);
+                   from weeksInMonth in month
+                    .GroupBy(GetWeekOfYear)
+                    .Select(FormatWeek)
+                    .FlipMonad()
+                   select BuildDefaultLayout(colorizedMonthName, weekDayLine, weeksInMonth);
 
         private static ImmutableList<string> BuildDefaultLayout(string colorizedMonthName, string weekDayLine, IEnumerable<string> weeks)
             => ImmutableList
@@ -30,7 +33,7 @@ namespace Calendar
                 .AddRange(weeks)
                 .Add(Spaces(WidthOfWeek()));
 
-        private static Reader<Fancy, string> ColorizedMonthName(IEnumerable<DateTime> month)
+        private static Reader<Enviroment, string> ColorizedMonthName(IEnumerable<DateTime> month)
             => MonthName(month)
                 .Colorize(Color.White);
 
@@ -44,11 +47,11 @@ namespace Calendar
             => month
                 .ToString(MonthFormat);
 
-        private static Reader<Fancy, string> FormatWeek(IGrouping<object, DateTime> week)
+        private static Reader<Enviroment, string> FormatWeek(IGrouping<int, DateTime> week)
             => from aggregateWeek in AggregateWeek(week)
                select PadWeek(aggregateWeek, week);
 
-        private static Reader<Fancy, string> AggregateWeek(IGrouping<object, DateTime> week)
+        private static Reader<Enviroment, string> AggregateWeek(IGrouping<int, DateTime> week)
             => from formatDay in week
                 .Select(FormatDay)
                 .FlipMonad()
@@ -60,7 +63,7 @@ namespace Calendar
             => aggregate
                 .Append(formattedString);
 
-        private static Reader<Fancy, string> FormatDay(DateTime day)
+        private static Reader<Enviroment, string> FormatDay(DateTime day)
             => from colorized in day
                 .Day
                 .ToString()
@@ -70,7 +73,7 @@ namespace Calendar
                 .ColorizeBg(ColorService.DayColor(day))
                select background;
 
-        private static Reader<Fancy, string> WeekDayLine()
+        private static Reader<Enviroment, string> WeekDayLine()
             => from weekDays in WeekDays()
                 .OrderBy(NthDayOfWeek)
                 .Select(FormattedWeekDay)
@@ -78,7 +81,7 @@ namespace Calendar
                select weekDays
                 .Aggregate(new StringBuilder(), AggregateString).ToString();
 
-        private static Reader<Fancy, string> FormattedWeekDay(DayOfWeek day)
+        private static Reader<Enviroment, string> FormattedWeekDay(DayOfWeek day)
             => ToShortestDayName(day)
                 .PadLeft(WidthOfWeekDay(day))
                 .Colorize(ColorService.WeekDayColor(day));
@@ -89,19 +92,25 @@ namespace Calendar
                 .Cast<DayOfWeek>();
 
         private static string ToShortestDayName(DayOfWeek dayOfWeek)
-            => CurrentDateTimeFormat.GetShortestDayName(dayOfWeek);
+            => CurrentDateTimeFormat
+                .GetShortestDayName(dayOfWeek);
 
-        private static object GetWeekOfYear(in DateTime dateTime)
-            => CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(dateTime, CurrentDateTimeFormat.CalendarWeekRule, CurrentDateTimeFormat.FirstDayOfWeek);
+        private static int GetWeekOfYear(DateTime dateTime)
+            => CultureInfo
+                .CurrentCulture
+                .Calendar
+                .GetWeekOfYear(dateTime, CurrentDateTimeFormat.CalendarWeekRule, CurrentDateTimeFormat.FirstDayOfWeek);
 
         private static DateTimeFormatInfo CurrentDateTimeFormat
-            => CultureInfo.CurrentCulture.DateTimeFormat;
+            => CultureInfo
+                .CurrentCulture
+                .DateTimeFormat;
 
         private static int WidthOfWeek()
             => WeekDays()
                 .Sum(WidthOfWeekDay);
 
-        private static string PadWeek(string formattedWeek, IGrouping<object, DateTime> week)
+        private static string PadWeek(string formattedWeek, IGrouping<int, DateTime> week)
             => StartsOnFirstDayOfWeek(week)
                 ? formattedWeek + Spaces(EndOfWeekSpaces(week.Count()))
                 : Spaces(BeginOfWeekSpaces(DaysInAWeek - week.Count())) + formattedWeek;
@@ -118,11 +127,15 @@ namespace Calendar
                 .Take(takeDays)
                 .Sum(WidthOfWeekDay);
 
-        private static bool StartsOnFirstDayOfWeek(IGrouping<object, DateTime> week)
+        private static bool StartsOnFirstDayOfWeek(IGrouping<int, DateTime> week)
             => NthDayOfWeek(week.First().DayOfWeek) == 0;
 
-        private static int WidthOfWeekDay(DayOfWeek day) =>
-            Math.Max(ToShortestDayName(day).Length + RowSeparationSpace, MinDayWidth);
+        private static int WidthOfWeekDay(DayOfWeek day)
+            => Math
+                .Max(WidthWithSeparation(day), MinDayWidth);
+
+        private static int WidthWithSeparation(DayOfWeek day)
+            => ToShortestDayName(day).Length + RowSeparationSpace;
 
         private static int NthDayOfWeek(DayOfWeek dayOfWeek)
             => (dayOfWeek + DaysInAWeek - CurrentDateTimeFormat.FirstDayOfWeek) % DaysInAWeek;

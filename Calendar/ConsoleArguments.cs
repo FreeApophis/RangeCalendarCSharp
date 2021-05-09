@@ -6,7 +6,6 @@ using Funcky.Extensions;
 using Funcky.Monads;
 using System.Linq;
 using Nager.Date;
-
 using static Funcky.Functional;
 
 namespace Calendar
@@ -30,7 +29,7 @@ namespace Calendar
             => SelectArgument(args, ParseExtensions.ParseIntOrNone)
                 .GetOrElse(DateTime.Now.Year);
 
-        public static Fancy GetFancy(string[] args)
+        public static Enviroment GetEnvironment(string[] args)
             => new(GetFancyMode(args).Match(false, True));
 
         private static Option<CultureInfo> ToCultureInfo(string cultureString)
@@ -59,7 +58,6 @@ namespace Calendar
 
         private static string TwoLetterIsoRegionNameFromCulture()
             => new RegionInfo(CultureInfo.CurrentCulture.LCID).TwoLetterISORegionName;
-
 
         private static bool Should(Option<Unit> unitOption)
             => unitOption
