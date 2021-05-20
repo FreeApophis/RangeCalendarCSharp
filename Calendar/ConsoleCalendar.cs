@@ -16,9 +16,9 @@ namespace Calendar
             => from layout in GetDays(year, endYear)
                 .AdjacentGroupBy(ByMonth)
                 .Select(MonthLayouter.DefaultLayout)
-                .FlipMonad()
+                .Sequence()
                select layout
-                .Chunk<IEnumerable<string>>(HorizontalMonths)
+                .Chunk(HorizontalMonths)
                 .Select(Transpose)
                 .SelectMany(JoinLine);
 

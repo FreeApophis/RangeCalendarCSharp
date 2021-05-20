@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using Funcky.Monads;
 
 namespace Calendar
 {
@@ -22,7 +23,7 @@ namespace Calendar
                    from weeksInMonth in month
                     .GroupBy(GetWeekOfYear)
                     .Select(FormatWeek)
-                    .FlipMonad()
+                    .Sequence()
                    select BuildDefaultLayout(colorizedMonthName, weekDayLine, weeksInMonth);
 
         private static ImmutableList<string> BuildDefaultLayout(string colorizedMonthName, string weekDayLine, IEnumerable<string> weeks)
@@ -54,7 +55,7 @@ namespace Calendar
         private static Reader<Enviroment, string> AggregateWeek(IGrouping<int, DateTime> week)
             => from formatDay in week
                 .Select(FormatDay)
-                .FlipMonad()
+                .Sequence()
                select formatDay
                 .Aggregate(new StringBuilder(), AggregateString)
                 .ToString();
@@ -77,7 +78,7 @@ namespace Calendar
             => from weekDays in WeekDays()
                 .OrderBy(NthDayOfWeek)
                 .Select(FormattedWeekDay)
-                .FlipMonad()
+                .Sequence()
                select weekDays
                 .Aggregate(new StringBuilder(), AggregateString).ToString();
 
