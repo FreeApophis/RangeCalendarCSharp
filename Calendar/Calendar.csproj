@@ -13,5 +13,7 @@
     <PackageReference Include="Nager.Date" Version="1.28.1" />
     <PackageReference Include="Pastel" Version="2.1.0" />
   </ItemGroup>
-
+  <ItemGroup>
+    <InternalsVisibleTo Include="Calendar.Test" />
+  </ItemGroup>
 </Project>
