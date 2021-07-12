@@ -7,9 +7,9 @@ namespace Calendar
 {
     internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
-            GetCultureInfo(args)
+            _ = GetCultureInfo(args)
                 .AndThen(cultureInfo => CultureInfo.CurrentCulture = cultureInfo);
 
             var arrangePage = ConsoleCalendar

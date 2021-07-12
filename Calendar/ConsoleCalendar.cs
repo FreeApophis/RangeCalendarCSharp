@@ -10,9 +10,8 @@ namespace Calendar
     internal class ConsoleCalendar
     {
         private const int HorizontalMonths = 3;
-        private static readonly Func<char, IEnumerable<string>, string> Join = string.Join;
 
-        public static Reader<Enviroment, IEnumerable<string>> ArrangeCalendarPage(int year, Option<int> endYear)
+        public static Reader<Environment, IEnumerable<string>> ArrangeCalendarPage(int year, Option<int> endYear)
             => from layout in GetDays(year, endYear)
                 .AdjacentGroupBy(ByMonth)
                 .Select(MonthLayouter.DefaultLayout)
@@ -37,7 +36,8 @@ namespace Calendar
         private static IEnumerable<string> JoinLine(IEnumerable<IEnumerable<string>> lines)
             => lines.Select(JoinWithSpace);
 
-        private static Func<IEnumerable<string>, string> JoinWithSpace 
-            => Join.Curry()(' ');
+        private static Func<IEnumerable<string>, string> JoinWithSpace
+            => s
+                => s.JoinToString(" ");
     }
 }
