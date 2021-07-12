@@ -16,18 +16,18 @@ namespace Calendar.Test
 
             var arrangePage = ConsoleCalendar.ArrangeCalendarPage(2000, 2000);
 
-            CheckEquality(TestData.ReadLines("Calendar2000deCH"), arrangePage(new Enviroment(false)));
+            CheckEquality(TestData.ReadLines("Calendar2000deCH"), arrangePage(new Environment(false)));
         }
 
-        private void CheckEquality(IEnumerable<string> expected, IEnumerable<string> actual)
+        private static void CheckEquality(IEnumerable<string> expected, IEnumerable<string> actual)
             => expected
                 .ZipLongest(actual)
                 .ForEach(CheckLine);
 
-        private void CheckLine(EitherOrBoth<string, string> line)
+        private static void CheckLine(EitherOrBoth<string, string> line)
             => Assert.True(line.Match(False, False, (reference, actual) => reference.TrimEnd() == actual.TrimEnd()), Message(line));
 
-        private string Message(Funcky.DataTypes.EitherOrBoth<string, string> line)
+        private static string Message(Funcky.DataTypes.EitherOrBoth<string, string> line)
             => line.Match(left => $"Right missing! left = {left}", right => $"Left missing! right = {right}", (left, right) => $"{left} and {right}");
     }
 }

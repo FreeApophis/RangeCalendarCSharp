@@ -15,9 +15,9 @@ namespace Calendar
         private const int MinDayWidth = 3;
         private const int DaysInAWeek = 7;
         private const char SpaceCharacter = ' ';
-        const string MonthFormat = "MMMM yyyy";
+        private const string MonthFormat = "MMMM yyyy";
 
-        public static Reader<Enviroment, IEnumerable<string>> DefaultLayout(IEnumerable<DateTime> month)
+        public static Reader<Environment, IEnumerable<string>> DefaultLayout(IEnumerable<DateTime> month)
                 => from colorizedMonthName in ColorizedMonthName(month)
                    from weekDayLine in WeekDayLine()
                    from weeksInMonth in month
@@ -34,7 +34,7 @@ namespace Calendar
                 .AddRange(weeks)
                 .Add(Spaces(WidthOfWeek()));
 
-        private static Reader<Enviroment, string> ColorizedMonthName(IEnumerable<DateTime> month)
+        private static Reader<Environment, string> ColorizedMonthName(IEnumerable<DateTime> month)
             => MonthName(month)
                 .Colorize(Color.White);
 
@@ -48,11 +48,11 @@ namespace Calendar
             => month
                 .ToString(MonthFormat);
 
-        private static Reader<Enviroment, string> FormatWeek(IGrouping<int, DateTime> week)
+        private static Reader<Environment, string> FormatWeek(IGrouping<int, DateTime> week)
             => from aggregateWeek in AggregateWeek(week)
                select PadWeek(aggregateWeek, week);
 
-        private static Reader<Enviroment, string> AggregateWeek(IGrouping<int, DateTime> week)
+        private static Reader<Environment, string> AggregateWeek(IEnumerable<DateTime> week)
             => from formatDay in week
                 .Select(FormatDay)
                 .Sequence()
@@ -64,7 +64,7 @@ namespace Calendar
             => aggregate
                 .Append(formattedString);
 
-        private static Reader<Enviroment, string> FormatDay(DateTime day)
+        private static Reader<Environment, string> FormatDay(DateTime day)
             => from colorized in day
                 .Day
                 .ToString()
@@ -74,7 +74,7 @@ namespace Calendar
                 .ColorizeBg(ColorService.DayColor(day))
                select background;
 
-        private static Reader<Enviroment, string> WeekDayLine()
+        private static Reader<Environment, string> WeekDayLine()
             => from weekDays in WeekDays()
                 .OrderBy(NthDayOfWeek)
                 .Select(FormattedWeekDay)
@@ -82,7 +82,7 @@ namespace Calendar
                select weekDays
                 .Aggregate(new StringBuilder(), AggregateString).ToString();
 
-        private static Reader<Enviroment, string> FormattedWeekDay(DayOfWeek day)
+        private static Reader<Environment, string> FormattedWeekDay(DayOfWeek day)
             => ToShortestDayName(day)
                 .PadLeft(WidthOfWeekDay(day))
                 .Colorize(ColorService.WeekDayColor(day));

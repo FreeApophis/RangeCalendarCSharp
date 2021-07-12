@@ -18,7 +18,7 @@ namespace Calendar
         public static CountryCode CountryFromCulture()
             => TwoLetterIsoRegionNameFromCulture()
                 .ParseEnumOrNone<CountryCode>()
-                .GetOrElse(() => throw new Exception("ooops unknown country code???"));
+                .GetOrElse(() => throw new Exception("Unknown country code"));
 
         public static Option<int> EndYear(string[] args)
             => Should(GetStreamingMode(args))
@@ -29,7 +29,7 @@ namespace Calendar
             => SelectArgument(args, ParseExtensions.ParseIntOrNone)
                 .GetOrElse(DateTime.Now.Year);
 
-        public static Enviroment GetEnvironment(string[] args)
+        public static Environment GetEnvironment(string[] args)
             => new(GetFancyMode(args).Match(false, True));
 
         private static Option<CultureInfo> ToCultureInfo(string cultureString)
