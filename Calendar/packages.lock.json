@@ -1,0 +1,59 @@
+{
+  "version": 1,
+  "dependencies": {
+    ".NETCoreApp,Version=v5.0": {
+      "Funcky": {
+        "type": "Direct",
+        "requested": "[2.5.0, 3.0.0)",
+        "resolved": "2.5.0",
+        "contentHash": "HOaFwIhsOeK4m4HScR+JQvJBCoz+wJq7xVH9exKXClpIu+eR7nKVYaCviNUqarneZykdcsbJz9g8ah4pI7UJqA=="
+      },
+      "Messerli.CodeStyle": {
+        "type": "Direct",
+        "requested": "[2.1.0, 3.0.0)",
+        "resolved": "2.1.0",
+        "contentHash": "dfdCzKmKfSeY8OFNShwaZ0fONIifsYj6dreyW9tD/1jdpR2lwPX56Iq3dcQH81ocrE/Ca5IbQOEDSrSY319VFA==",
+        "dependencies": {
+          "IDisposableAnalyzers": "3.4.13",
+          "Messerli.CodeStyle.Analyzers": "0.1.0",
+          "StyleCop.Analyzers": "1.2.0-beta.333"
+        }
+      },
+      "Nager.Date": {
+        "type": "Direct",
+        "requested": "[1.29.2, )",
+        "resolved": "1.29.2",
+        "contentHash": "muWFXb/iRKoglZQeCLsA5Q/R8I5Il+iAEFFfWB5evHcnHfyzbnBOAQH6aIFLAUCwLl4PI95cB1/985WuszcuMQ=="
+      },
+      "Pastel": {
+        "type": "Direct",
+        "requested": "[2.1.0, )",
+        "resolved": "2.1.0",
+        "contentHash": "CYPB5mCTGdmhaW7FyiYerq8S5S6Sz1pBJMC6XmmWvk/APiKjqmCc5vIn4XX++3E1w56LadBUDpicWBc2k84kmQ=="
+      },
+      "IDisposableAnalyzers": {
+        "type": "Transitive",
+        "resolved": "3.4.13",
+        "contentHash": "JsOSVDyCPMsiaPZLrdtNKmkSSfMvOsHq5JKPUOF2jg+zN8t/Vn1yLiO6BMZGD1NlhIQ5prS6D9LuLOu3FT6CpA=="
+      },
+      "Messerli.CodeStyle.Analyzers": {
+        "type": "Transitive",
+        "resolved": "0.1.0",
+        "contentHash": "qCqzb4CQwxj2q62CDSSs5YmFYZPTDxA5T5/UWdD8m02MTz9DSrofz8agVoLgksRBMnaAz/wsOtnAAmNgXrQ6fA=="
+      },
+      "StyleCop.Analyzers": {
+        "type": "Transitive",
+        "resolved": "1.2.0-beta.333",
+        "contentHash": "o2r6o6TVTb6VdTtWEYT88/SgixcujjZ3gXMktvI/aNkA3y0CxUSVZEL23OjFe4/sDiTvldkdhKEyAQP9Z8r5wA==",
+        "dependencies": {
+          "StyleCop.Analyzers.Unstable": "1.2.0.333"
+        }
+      },
+      "StyleCop.Analyzers.Unstable": {
+        "type": "Transitive",
+        "resolved": "1.2.0.333",
+        "contentHash": "7mwxcwa3xZnyU71OTqSgntCDpsZ5gkc4saXhuJeyg5Xc+3xiQxzyhy26uG8rVF8Z7GKpXCsHCL3rd5ZomA+a/A=="
+      }
+    }
+  }
+}
