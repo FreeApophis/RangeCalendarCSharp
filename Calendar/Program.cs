@@ -1,7 +1,7 @@
-﻿using System;
-using System.Globalization;
+﻿using System.Globalization;
 using Funcky.Extensions;
 using static Calendar.ConsoleArguments;
+using static System.Console;
 
 namespace Calendar
 {
@@ -10,13 +10,19 @@ namespace Calendar
         static void Main(string[] args)
         {
             GetCultureInfo(args)
-                .AndThen(cultureInfo => CultureInfo.CurrentCulture = cultureInfo);
+                .AndThen(SetCulture);
 
             var arrangePage = ConsoleCalendar
                 .ArrangeCalendarPage(GetCalendarYear(args), EndYear(args));
 
             arrangePage(GetEnvironment(args))
-                .ForEach(Console.WriteLine);
+                .ForEach(WriteLine);
+        }
+
+        private static void SetCulture(CultureInfo cultureInfo)
+        {
+            CultureInfo.CurrentCulture = cultureInfo;
+            CultureInfo.CurrentUICulture = cultureInfo;
         }
     }
 }

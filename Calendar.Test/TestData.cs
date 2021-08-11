@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 
 namespace Calendar.Test
@@ -12,17 +11,7 @@ namespace Calendar.Test
             using var stream = GetResourceStream(resource);
             using var reader = new StreamReader(stream);
 
-            while (true)
-            {
-                var line = reader.ReadLine();
-
-                if (line is null)
-                {
-                    yield break;
-                }
-
-                yield return line;
-            }
+            return reader.ReadLines();
         }
 
         private static Stream GetResourceStream(string resource)

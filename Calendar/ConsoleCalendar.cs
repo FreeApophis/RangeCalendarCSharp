@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using Funcky;
 using Funcky.Extensions;
@@ -13,14 +14,32 @@ namespace Calendar
         private static readonly Func<char, IEnumerable<string>, string> Join = string.Join;
 
         public static Reader<Enviroment, IEnumerable<string>> ArrangeCalendarPage(int year, Option<int> endYear)
-            => from layout in GetDays(year, endYear)
+            => from title in GetTitle(year, endYear)
+               from layout in GetDays(year, endYear)
                 .AdjacentGroupBy(ByMonth)
                 .Select(MonthLayouter.DefaultLayout)
                 .Sequence()
-               select layout
+               let calendar = layout
                 .Chunk<IEnumerable<string>>(HorizontalMonths)
                 .Select(Transpose)
-                .SelectMany(JoinLine);
+                .SelectMany(JoinLine)
+               select Sequence.Concat(title, calendar);
+
+        private static Reader<Enviroment, IEnumerable<string>> GetTitle(int year, Option<int> endYear)
+            => from title in Resource
+                .CalendarOneYear
+                .Center(CalendarWidth)
+                .Colorize(Color.Yellow)
+               select Sequence
+                .Return(string.Empty)
+                .Append(title)
+                .Append(string.Empty);
+
+        private static int CalendarWidth
+            => HorizontalMonths * MonthLayouter.WidthOfWeek + SeparatorsBetweenMonths();
+
+        private static int SeparatorsBetweenMonths()
+            => HorizontalMonths - 1;
 
         private static IEnumerable<IEnumerable<string>> Transpose(IEnumerable<IEnumerable<string>> months)
             => months
@@ -37,7 +56,7 @@ namespace Calendar
         private static IEnumerable<string> JoinLine(IEnumerable<IEnumerable<string>> lines)
             => lines.Select(JoinWithSpace);
 
-        private static Func<IEnumerable<string>, string> JoinWithSpace 
+        private static Func<IEnumerable<string>, string> JoinWithSpace
             => Join.Curry()(' ');
     }
 }

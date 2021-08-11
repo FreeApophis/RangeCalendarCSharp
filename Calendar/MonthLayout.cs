@@ -25,6 +25,9 @@ namespace Calendar
                     .Select(FormatWeek)
                     .Sequence()
                    select BuildDefaultLayout(colorizedMonthName, weekDayLine, weeksInMonth);
+        public static int WidthOfWeek
+            => WeekDays()
+                .Sum(WidthOfWeekDay);
 
         private static ImmutableList<string> BuildDefaultLayout(string colorizedMonthName, string weekDayLine, IEnumerable<string> weeks)
             => ImmutableList
@@ -32,7 +35,7 @@ namespace Calendar
                 .Add(colorizedMonthName)
                 .Add(weekDayLine)
                 .AddRange(weeks)
-                .Add(Spaces(WidthOfWeek()));
+                .Add(Spaces(WidthOfWeek));
 
         private static Reader<Enviroment, string> ColorizedMonthName(IEnumerable<DateTime> month)
             => MonthName(month)
@@ -42,7 +45,7 @@ namespace Calendar
             => month
                 .Select(FormatMonthName)
                 .First()
-                .Center(WidthOfWeek());
+                .Center(WidthOfWeek);
 
         private static string FormatMonthName(DateTime month)
             => month
@@ -106,10 +109,6 @@ namespace Calendar
             => CultureInfo
                 .CurrentCulture
                 .DateTimeFormat;
-
-        private static int WidthOfWeek()
-            => WeekDays()
-                .Sum(WidthOfWeekDay);
 
         private static string PadWeek(string formattedWeek, IGrouping<int, DateTime> week)
             => StartsOnFirstDayOfWeek(week)
