@@ -13,6 +13,12 @@ namespace Calendar
         private const int HorizontalMonths = 3;
         private static readonly Func<char, IEnumerable<string>, string> Join = string.Join;
 
+        private static int CalendarWidth
+            => (HorizontalMonths * MonthLayouter.WidthOfWeek) + SeparatorsBetweenMonths();
+
+        private static Func<IEnumerable<string>, string> JoinWithSpace
+            => Join.Curry()(' ');
+
         public static Reader<Enviroment, IEnumerable<string>> ArrangeCalendarPage(int year, Option<int> endYear)
             => from title in GetTitle(year, endYear)
                from layout in GetDays(year, endYear)
@@ -35,9 +41,6 @@ namespace Calendar
                 .Append(title)
                 .Append(string.Empty);
 
-        private static int CalendarWidth
-            => HorizontalMonths * MonthLayouter.WidthOfWeek + SeparatorsBetweenMonths();
-
         private static int SeparatorsBetweenMonths()
             => HorizontalMonths - 1;
 
@@ -55,8 +58,5 @@ namespace Calendar
 
         private static IEnumerable<string> JoinLine(IEnumerable<IEnumerable<string>> lines)
             => lines.Select(JoinWithSpace);
-
-        private static Func<IEnumerable<string>, string> JoinWithSpace
-            => Join.Curry()(' ');
     }
 }

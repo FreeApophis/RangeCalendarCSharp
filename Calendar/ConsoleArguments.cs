@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using Funcky;
 using Funcky.Extensions;
 using Funcky.Monads;
-using System.Linq;
 using Nager.Date;
 using static Funcky.Functional;
 

@@ -1,11 +1,11 @@
-﻿using Funcky.Monads;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using Funcky.Monads;
 
 namespace Calendar
 {
@@ -15,7 +15,16 @@ namespace Calendar
         private const int MinDayWidth = 3;
         private const int DaysInAWeek = 7;
         private const char SpaceCharacter = ' ';
-        const string MonthFormat = "MMMM yyyy";
+        private const string MonthFormat = "MMMM yyyy";
+
+        public static int WidthOfWeek
+            => WeekDays()
+                .Sum(WidthOfWeekDay);
+
+        private static DateTimeFormatInfo CurrentDateTimeFormat
+            => CultureInfo
+                .CurrentCulture
+                .DateTimeFormat;
 
         public static Reader<Enviroment, IEnumerable<string>> DefaultLayout(IEnumerable<DateTime> month)
                 => from colorizedMonthName in ColorizedMonthName(month)
@@ -25,9 +34,6 @@ namespace Calendar
                     .Select(FormatWeek)
                     .Sequence()
                    select BuildDefaultLayout(colorizedMonthName, weekDayLine, weeksInMonth);
-        public static int WidthOfWeek
-            => WeekDays()
-                .Sum(WidthOfWeekDay);
 
         private static ImmutableList<string> BuildDefaultLayout(string colorizedMonthName, string weekDayLine, IEnumerable<string> weeks)
             => ImmutableList
@@ -104,11 +110,6 @@ namespace Calendar
                 .CurrentCulture
                 .Calendar
                 .GetWeekOfYear(dateTime, CurrentDateTimeFormat.CalendarWeekRule, CurrentDateTimeFormat.FirstDayOfWeek);
-
-        private static DateTimeFormatInfo CurrentDateTimeFormat
-            => CultureInfo
-                .CurrentCulture
-                .DateTimeFormat;
 
         private static string PadWeek(string formattedWeek, IGrouping<int, DateTime> week)
             => StartsOnFirstDayOfWeek(week)

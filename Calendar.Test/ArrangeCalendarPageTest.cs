@@ -1,7 +1,7 @@
-using Funcky.DataTypes;
-using Funcky.Extensions;
 using System.Collections.Generic;
 using System.Globalization;
+using Funcky.DataTypes;
+using Funcky.Extensions;
 using Xunit;
 using static Funcky.Functional;
 

@@ -1,13 +1,13 @@
 ﻿using System.Globalization;
 using Funcky.Extensions;
-using static Calendar.ConsoleArguments;
 using static System.Console;
+using static Calendar.ConsoleArguments;
 
 namespace Calendar
 {
     internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             GetCultureInfo(args)
                 .AndThen(SetCulture);
