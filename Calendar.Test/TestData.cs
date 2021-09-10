@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using Funcky.Extensions;
 
 namespace Calendar.Test
 {
@@ -11,7 +12,7 @@ namespace Calendar.Test
             using var stream = GetResourceStream(resource);
             using var reader = new StreamReader(stream);
 
-            return reader.ReadLines();
+            return reader.ReadLines().Materialize();
         }
 
         private static Stream GetResourceStream(string resource)
