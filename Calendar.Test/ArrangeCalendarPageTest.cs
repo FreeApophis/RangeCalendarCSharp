@@ -1,7 +1,4 @@
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using Calendar;
 using Funcky.DataTypes;
 using Funcky.Extensions;
 using Xunit;

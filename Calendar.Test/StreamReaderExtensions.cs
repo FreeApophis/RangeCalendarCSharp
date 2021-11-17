@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using Funcky;
+﻿using Funcky;
 using Funcky.Monads;
 
 namespace Calendar.Test;
