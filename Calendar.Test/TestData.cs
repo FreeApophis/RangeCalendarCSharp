@@ -16,7 +16,7 @@ namespace Calendar.Test
         }
 
         private static Stream GetResourceStream(string resource)
-            => TestAssembly().GetManifestResourceStream(ExpandResourceName(resource));
+            => TestAssembly().GetManifestResourceStream(ExpandResourceName(resource)) ?? throw new Exception($"Resource '{resource}' could not be loaded.");
 
         private static Assembly TestAssembly()
             => Assembly.GetExecutingAssembly();

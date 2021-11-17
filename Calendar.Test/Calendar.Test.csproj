@@ -1,9 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk; Microsoft.Build.CentralPackageVersions">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+	  <TargetFramework>net6.0</TargetFramework>
+	  <LangVersion>10.0</LangVersion>
+	  <Nullable>enable</Nullable>
+	  <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+	  <ImplicitUsings>enable</ImplicitUsings>
 
-    <IsPackable>false</IsPackable>
+	  <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
