@@ -3,26 +3,25 @@ using Funcky.Extensions;
 using static System.Console;
 using static Calendar.ConsoleArguments;
 
-namespace Calendar
+namespace Calendar;
+
+internal class Program
 {
-    internal class Program
+    private static void Main(string[] args)
     {
-        private static void Main(string[] args)
-        {
-            GetCultureInfo(args)
-                .AndThen(SetCulture);
+        GetCultureInfo(args)
+            .AndThen(SetCulture);
 
-            var arrangePage = ConsoleCalendar
-                .ArrangeCalendarPage(GetCalendarYear(args), EndYear(args));
+        var arrangePage = ConsoleCalendar
+            .ArrangeCalendarPage(GetCalendarYear(args), EndYear(args));
 
-            arrangePage(GetEnvironment(args))
-                .ForEach(WriteLine);
-        }
+        arrangePage(GetEnvironment(args))
+            .ForEach(WriteLine);
+    }
 
-        private static void SetCulture(CultureInfo cultureInfo)
-        {
-            CultureInfo.CurrentCulture = cultureInfo;
-            CultureInfo.CurrentUICulture = cultureInfo;
-        }
+    private static void SetCulture(CultureInfo cultureInfo)
+    {
+        CultureInfo.CurrentCulture = cultureInfo;
+        CultureInfo.CurrentUICulture = cultureInfo;
     }
 }
