@@ -42,6 +42,6 @@ internal static class StringExtensions
             : $"{start}-{end}";
 
     private static Reader<Environment, bool> ShouldColorize(Color color)
-        => fancy
-            => color != Color.Transparent && fancy.IsFancy;
+        => environment
+            => color != Color.Transparent && environment.IsFancy;
 }

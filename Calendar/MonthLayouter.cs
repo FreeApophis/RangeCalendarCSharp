@@ -12,7 +12,6 @@ internal class MonthLayouter
     private const int MinDayWidth = 3;
     private const int DaysInAWeek = 7;
     private const char SpaceCharacter = ' ';
-    private const string MonthFormat = "MMMM yyyy";
 
     public static int WidthOfWeek
         => WeekDays()
@@ -41,18 +40,18 @@ internal class MonthLayouter
             .Add(Spaces(WidthOfWeek));
 
     private static Reader<Environment, string> ColorizedMonthName(IEnumerable<DateTime> month)
-        => MonthName(month)
-            .Colorize(Color.White);
+        => from monthName in MonthName(month)
+           from colorizedMonthName in monthName.Colorize(Color.White)
+           select colorizedMonthName;
 
-    private static string MonthName(IEnumerable<DateTime> month)
-        => month
-            .Select(FormatMonthName)
-            .First()
-            .Center(WidthOfWeek);
+    private static Reader<Environment, string> MonthName(IEnumerable<DateTime> month)
+        => from monthName in FormatMonthName(month.First())
+           select monthName.Center(WidthOfWeek);
 
-    private static string FormatMonthName(DateTime month)
-        => month
-            .ToString(MonthFormat);
+    private static Reader<Environment, string> FormatMonthName(DateTime month)
+        => environment
+            => month
+                .ToString(environment.MonthFormat);
 
     private static Reader<Environment, string> FormatWeek(IGrouping<int, DateTime> week)
         => from aggregateWeek in AggregateWeek(week)

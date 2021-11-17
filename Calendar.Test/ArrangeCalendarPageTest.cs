@@ -11,10 +11,10 @@ public class ArrangeCalendarPageTest
     [Fact]
     public void ArrangeCalendarPageWorksAsExpected()
     {
-        CultureInfo.CurrentCulture = new CultureInfo("de-CH");
+        CultureHelper.SetAllCultures(new CultureInfo("de-CH"));
 
         var arrangePage = ConsoleCalendar.ArrangeCalendarPage(2000, 2000);
-        var result = arrangePage(new Environment(false)).ToList();
+        var result = arrangePage(new Environment(false, "MMMM yyyy")).ToList();
 
         CheckEquality(TestData.ReadLines("Calendar2000deCH"), result);
     }

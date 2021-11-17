@@ -27,7 +27,7 @@ internal static class ConsoleArguments
             .GetOrElse(DateTime.Now.Year);
 
     public static Environment GetEnvironment(string[] args)
-        => new(GetFancyMode(args).Match(false, True));
+        => new(GetFancyMode(args).Match(false, True), "MMMM yyyy");
 
     private static Option<CultureInfo> ToCultureInfo(string cultureString)
         => CultureInfo

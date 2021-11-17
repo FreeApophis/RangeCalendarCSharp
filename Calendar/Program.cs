@@ -1,17 +1,10 @@
-﻿using System.Globalization;
-using Calendar;
+﻿using Calendar;
 using Funcky.Extensions;
 using static System.Console;
 using static Calendar.ConsoleArguments;
 
-static void SetAllCultures(CultureInfo cultureInfo)
-{
-    CultureInfo.CurrentCulture = cultureInfo;
-    CultureInfo.CurrentUICulture = cultureInfo;
-}
-
 GetCultureInfo(args)
-    .AndThen(SetAllCultures);
+    .AndThen(CultureHelper.SetAllCultures);
 
 var arrangePage = ConsoleCalendar.ArrangeCalendarPage(GetCalendarYear(args), EndYear(args));
 
