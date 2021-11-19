@@ -32,8 +32,7 @@ internal class MonthLayouter
                select BuildDefaultLayout(colorizedMonthName, weekDayLine, weeksInMonth);
 
     private static ImmutableList<string> BuildDefaultLayout(string colorizedMonthName, string weekDayLine, IEnumerable<string> weeks)
-        => ImmutableList
-            .Create<string>()
+        => ImmutableList<string>.Empty
             .Add(colorizedMonthName)
             .Add(weekDayLine)
             .AddRange(weeks)

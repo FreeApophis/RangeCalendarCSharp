@@ -18,14 +18,14 @@ internal static class StringExtensions
         => string.Format(text, FormatMultipleYears(start, end));
 
     public static Reader<Environment, string> Colorize(this string input, Color color)
-            => from shouldColorize in ShouldColorize(color)
-               select shouldColorize
+        => from shouldColorize in ShouldColorize(color)
+           select shouldColorize
                 ? input.Pastel(color)
                 : input;
 
     public static Reader<Environment, string> ColorizeBg(this string input, Color color)
-            => from shouldColorize in ShouldColorize(color)
-               select shouldColorize
+        => from shouldColorize in ShouldColorize(color)
+           select shouldColorize
                 ? input.PastelBg(color)
                 : input;
 
@@ -36,8 +36,7 @@ internal static class StringExtensions
                 some: year => FormatSingleYear(start, year));
 
     private static string FormatSingleYear(int start, int end)
-        =>
-        start == end
+        => start == end
             ? $"{start}"
             : $"{start}-{end}";
 

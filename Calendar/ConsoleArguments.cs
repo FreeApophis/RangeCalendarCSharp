@@ -9,8 +9,9 @@ namespace Calendar;
 
 internal static class ConsoleArguments
 {
-    public static Option<CultureInfo> GetCultureInfo(IEnumerable<string> args)
-        => SelectArgument(args, ToCultureInfo);
+    public static Option<CultureInfo> GetCultureInfo(IEnumerable<string> arguments)
+        => arguments
+            .SelectArgument(ToCultureInfo);
 
     public static CountryCode CountryFromCulture()
         => TwoLetterIsoRegionNameFromCulture()
@@ -32,18 +33,24 @@ internal static class ConsoleArguments
     private static Option<CultureInfo> ToCultureInfo(string cultureString)
         => CultureInfo
             .GetCultures(CultureTypes.AllCultures)
-            .Where(culture => culture.Name == cultureString)
+            .Where(CultureIs(cultureString))
             .FirstOrNone();
 
-    private static Option<Unit> GetStreamingMode(IEnumerable<string> args)
-        => SelectArgument(args, HasArgument("stream"));
+    private static Func<CultureInfo, bool> CultureIs(string cultureString)
+        => culture
+            => culture.Name == cultureString;
 
-    private static Option<Unit> GetFancyMode(IEnumerable<string> args)
-        => SelectArgument(args, HasArgument("fancy"));
+    private static Option<Unit> GetStreamingMode(IEnumerable<string> arguments)
+        => arguments
+            .SelectArgument(HasArgument("stream"));
 
-    private static Option<T> SelectArgument<T>(IEnumerable<string> args, Func<string, Option<T>> selector)
+    private static Option<Unit> GetFancyMode(IEnumerable<string> arguments)
+        => arguments
+            .SelectArgument(HasArgument("fancy"));
+
+    private static Option<T> SelectArgument<T>(this IEnumerable<string> arguments, Func<string, Option<T>> selector)
         where T : notnull
-        => args
+        => arguments
             .WhereSelect(selector)
             .FirstOrNone();
 

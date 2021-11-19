@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 using Nager.Date;
+using Nager.Date.Model;
 
 namespace Calendar;
 
@@ -24,5 +25,9 @@ internal class ColorService
         => DateSystem
             .GetPublicHolidayProvider(ConsoleArguments.CountryFromCulture())
             .Get(day.Year)
-            .Any(d => d.Date.DayOfYear == day.DayOfYear);
+            .Any(IsSameDay(day));
+
+    private static Func<PublicHoliday, bool> IsSameDay(DateTime day)
+        => holiday
+            => holiday.Date.DayOfYear == day.DayOfYear;
 }
