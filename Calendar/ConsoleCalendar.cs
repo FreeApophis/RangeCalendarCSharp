@@ -31,9 +31,7 @@ internal class ConsoleCalendar
             .Center(CalendarWidth)
             .Colorize(Color.Yellow)
            select Sequence
-            .Return(string.Empty)
-            .Append(title)
-            .Append(string.Empty);
+            .Return(string.Empty, title, string.Empty);
 
     private static int SeparatorsBetweenMonths()
         => HorizontalMonths - 1;
@@ -44,7 +42,7 @@ internal class ConsoleCalendar
 
     private static IEnumerable<DateTime> GetDays(int fromYear, Option<int> toYear = default)
         => Sequence
-            .Generate(JanuaryFirst(fromYear), NextDay)
+            .Successors(JanuaryFirst(fromYear), NextDay)
             .TakeWhile(IsNotBeyondYear(toYear));
 
     private static Func<DateTime, bool> IsNotBeyondYear(Option<int> toYear)

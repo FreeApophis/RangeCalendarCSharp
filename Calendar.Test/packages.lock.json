@@ -59,8 +59,8 @@
       },
       "Funcky": {
         "type": "Transitive",
-        "resolved": "2.5.0",
-        "contentHash": "HOaFwIhsOeK4m4HScR+JQvJBCoz+wJq7xVH9exKXClpIu+eR7nKVYaCviNUqarneZykdcsbJz9g8ah4pI7UJqA=="
+        "resolved": "2.6.0",
+        "contentHash": "Ow6JinsiLjiJSgN3D+i51AB/6mKFlHQd84worTu57G8sC4+VgLWTkVMuABKDK+l38rTHnQaWZA23+YPydW+rrQ=="
       },
       "IDisposableAnalyzers": {
         "type": "Transitive",
@@ -1157,7 +1157,7 @@
       "calendar": {
         "type": "Project",
         "dependencies": {
-          "Funcky": "[2.5.0, 3.0.0)",
+          "Funcky": "[2.6.0, 3.0.0)",
           "Nager.Date": "1.29.2",
           "Pastel": "2.1.0"
         }

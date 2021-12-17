@@ -4,9 +4,21 @@
     "net6.0": {
       "Funcky": {
         "type": "Direct",
-        "requested": "[2.5.0, 3.0.0)",
-        "resolved": "2.5.0",
-        "contentHash": "HOaFwIhsOeK4m4HScR+JQvJBCoz+wJq7xVH9exKXClpIu+eR7nKVYaCviNUqarneZykdcsbJz9g8ah4pI7UJqA=="
+        "requested": "[2.6.0, 3.0.0)",
+        "resolved": "2.6.0",
+        "contentHash": "Ow6JinsiLjiJSgN3D+i51AB/6mKFlHQd84worTu57G8sC4+VgLWTkVMuABKDK+l38rTHnQaWZA23+YPydW+rrQ=="
+      },
+      "Funcky.Analyzers": {
+        "type": "Direct",
+        "requested": "[1.0.0, )",
+        "resolved": "1.0.0",
+        "contentHash": "Qtj1PdQTh298gQFP0qrM9vJGeuWQ6upOJYNKQk9RGaWaTG40WqDB/CynJancymFeYo/Z0t7q1RokY047hY0SKQ=="
+      },
+      "Funcky.DiscriminatedUnion": {
+        "type": "Direct",
+        "requested": "[0.1.0, )",
+        "resolved": "0.1.0",
+        "contentHash": "gLOxpDpIEb+qcG7H5USKdaRfzaIB4J8U2G8OPE/kyC43DV5e/exrxuapF3WIYfEYspiZB4Xx5QhBBShdFdTEoQ=="
       },
       "Messerli.CodeStyle": {
         "type": "Direct",

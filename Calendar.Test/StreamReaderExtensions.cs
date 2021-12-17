@@ -7,9 +7,12 @@ public static class StreamReaderExtensions
 {
     public static IEnumerable<string> ReadLines(this StreamReader streamReader)
         => Sequence
-            .Generate(string.Empty, NextLine(streamReader));
+            .Successors(ReadLineOrNone(streamReader), NextLine(streamReader));
 
     private static Func<string, Option<string>> NextLine(StreamReader streamReader)
         => _
-            => Option.FromNullable(streamReader.ReadLine());
+            => ReadLineOrNone(streamReader);
+
+    private static Option<string> ReadLineOrNone(StreamReader streamReader)
+        => Option.FromNullable(streamReader.ReadLine());
 }

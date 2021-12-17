@@ -11,6 +11,8 @@
 
 	<ItemGroup>
 		<PackageReference Include="Funcky" />
+		<PackageReference Include="Funcky.Analyzers" PrivateAssets="all" />
+		<PackageReference Include="Funcky.DiscriminatedUnion" PrivateAssets="all" />
 		<PackageReference Include="Nager.Date" />
 		<PackageReference Include="Pastel" />
 	</ItemGroup>
