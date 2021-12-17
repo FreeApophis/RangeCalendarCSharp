@@ -7,13 +7,10 @@ namespace Calendar.Test
         [Theory]
         [MemberData(nameof(GetDifferentProgramInputs))]
         public void GetCalendarFormatReturnsTheArgumentsParsedToADiscriminatedUnionOfCorrectType(string[] arguments, CalendarFormat calendarFormat)
-        {
-            Assert.Equal(calendarFormat, arguments.GetCalendarFormat());
-        }
+            => Assert.Equal(calendarFormat, arguments.GetCalendarFormat());
 
         public static TheoryData<string[], CalendarFormat> GetDifferentProgramInputs()
-        {
-            return new TheoryData<string[], CalendarFormat>
+            => new()
             {
                 { new[] { "2020" }, new CalendarFormat.SingleYear(2020) },
                 { new[] { "2020", "2020" }, new CalendarFormat.SingleYear(2020) },
@@ -26,6 +23,5 @@ namespace Calendar.Test
                 { new[] { "2020", "2020", "stream" }, new CalendarFormat.FromYear(2020) },
                 { new[] { "something", "different", "fancy" }, new CalendarFormat.SingleYear(DateTime.Now.Year) },
             };
-        }
     }
 }
