@@ -12,6 +12,7 @@ namespace Calendar.Test
         public static TheoryData<string[], CalendarFormat> GetDifferentProgramInputs()
             => new()
             {
+                { new string[] { }, new CalendarFormat.SingleYear(DateTime.Now.Year) },
                 { new[] { "2020" }, new CalendarFormat.SingleYear(2020) },
                 { new[] { "2020", "2020" }, new CalendarFormat.SingleYear(2020) },
                 { new[] { "fancy" }, new CalendarFormat.SingleYear(DateTime.Now.Year) },
