@@ -9,26 +9,58 @@ namespace Calendar;
 
 internal static class ConsoleArguments
 {
+    private const int EndYearOffset = 1;
+
     public static Option<CultureInfo> GetCultureInfo(IEnumerable<string> arguments)
         => arguments
             .SelectArgument(ToCultureInfo);
+
+    public static Environment GetEnvironment(IEnumerable<string> arguments)
+        => new(arguments.GetFancyMode().Match(false, True), "MMMM yyyy");
 
     public static CountryCode CountryFromCulture()
         => TwoLetterIsoRegionNameFromCulture()
             .ParseEnumOrNone<CountryCode>()
             .GetOrElse(() => throw new Exception("Unknown country code"));
 
-    public static Option<int> EndYear(string[] args)
-        => Should(GetStreamingMode(args))
-            ? Option<int>.None()
-            : GetCalendarYear(args);
+    public static CalendarFormat GetCalendarFormat(this IEnumerable<string> arguments)
+        => arguments
+            .GetStreamingMode()
+            .Match(
+                none: FixedCalendarFormat(arguments),
+                some: StreamingCalendarFormat(arguments));
 
-    public static int GetCalendarYear(IEnumerable<string> args)
-        => SelectArgument(args, ParseExtensions.ParseIntOrNone)
+    private static Func<CalendarFormat> FixedCalendarFormat(IEnumerable<string> arguments)
+        => ()
+            => arguments
+                .EndYear()
+                .Match(
+                    none: SingleYearFormat(arguments),
+                    some: YearRangeFormat(arguments));
+
+    private static Func<int, CalendarFormat> YearRangeFormat(IEnumerable<string> arguments)
+        => endYear
+            => arguments.StartYear() < endYear
+                ? new CalendarFormat.YearRange(arguments.StartYear(), endYear)
+                : new CalendarFormat.SingleYear(arguments.StartYear());
+
+    private static Func<CalendarFormat> SingleYearFormat(IEnumerable<string> arguments)
+        => ()
+            => new CalendarFormat.SingleYear(arguments.StartYear());
+
+    private static Func<Unit, CalendarFormat> StreamingCalendarFormat(IEnumerable<string> arguments)
+        => _
+            => new CalendarFormat.FromYear(arguments.StartYear());
+
+    private static int StartYear(this IEnumerable<string> arguments)
+        => SelectArgument(arguments, ParseExtensions.ParseIntOrNone)
             .GetOrElse(DateTime.Now.Year);
 
-    public static Environment GetEnvironment(string[] args)
-        => new(GetFancyMode(args).Match(false, True), "MMMM yyyy");
+    private static Option<int> EndYear(this IEnumerable<string> arguments)
+        => arguments
+            .WhereSelect(ParseExtensions.ParseIntOrNone)
+            .Skip(EndYearOffset)
+            .FirstOrNone();
 
     private static Option<CultureInfo> ToCultureInfo(string cultureString)
         => CultureInfo
@@ -40,11 +72,11 @@ internal static class ConsoleArguments
         => culture
             => culture.Name == cultureString;
 
-    private static Option<Unit> GetStreamingMode(IEnumerable<string> arguments)
+    private static Option<Unit> GetStreamingMode(this IEnumerable<string> arguments)
         => arguments
             .SelectArgument(HasArgument("stream"));
 
-    private static Option<Unit> GetFancyMode(IEnumerable<string> arguments)
+    private static Option<Unit> GetFancyMode(this IEnumerable<string> arguments)
         => arguments
             .SelectArgument(HasArgument("fancy"));
 
@@ -56,14 +88,8 @@ internal static class ConsoleArguments
 
     private static Func<string, Option<Unit>> HasArgument(string givenArgument)
         => argument
-            => argument == givenArgument
-                ? Option.Some(Unit.Value)
-                : Option<Unit>.None();
+            => Option.FromBoolean(argument == givenArgument);
 
     private static string TwoLetterIsoRegionNameFromCulture()
         => new RegionInfo(CultureInfo.CurrentCulture.LCID).TwoLetterISORegionName;
-
-    private static bool Should(Option<Unit> unitOption)
-        => unitOption
-            .Match(false, True);
 }

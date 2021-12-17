@@ -6,7 +6,9 @@ using static Calendar.ConsoleArguments;
 GetCultureInfo(args)
     .AndThen(CultureHelper.SetAllCultures);
 
-var arrangePage = ConsoleCalendar.ArrangeCalendarPage(GetCalendarYear(args), EndYear(args));
+var arrangePage = args
+    .GetCalendarFormat()
+    .ArrangeCalendarPage();
 
 arrangePage(GetEnvironment(args))
     .ForEach(WriteLine);

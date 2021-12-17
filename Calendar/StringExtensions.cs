@@ -14,8 +14,11 @@ internal static class StringExtensions
             _ => Center($" {text} ", width),
         };
 
-    public static string ApplyYear(this string text, int start, Option<int> end)
-        => string.Format(text, FormatMultipleYears(start, end));
+    public static string ApplyCalendarFormat(this CalendarFormat calendarFormat)
+        => calendarFormat.Match(
+            singleYear: FormatSingleYear,
+            fromYear: FormatFromYear,
+            yearRange: FormatYearRange);
 
     public static Reader<Environment, string> Colorize(this string input, Color color)
         => from shouldColorize in ShouldColorize(color)
@@ -29,18 +32,16 @@ internal static class StringExtensions
                 ? input.PastelBg(color)
                 : input;
 
-    private static string FormatMultipleYears(int start, Option<int> end)
-        => end
-            .Match(
-                none: () => $"{start}-?",
-                some: year => FormatSingleYear(start, year));
-
-    private static string FormatSingleYear(int start, int end)
-        => start == end
-            ? $"{start}"
-            : $"{start}-{end}";
-
     private static Reader<Environment, bool> ShouldColorize(Color color)
         => environment
             => color != Color.Transparent && environment.IsFancy;
+
+    private static string FormatYearRange(CalendarFormat.YearRange yearRange)
+    => string.Format(Resource.YearRangeFormat, yearRange.StartYear, yearRange.EndYear);
+
+    private static string FormatFromYear(CalendarFormat.FromYear fromYear)
+        => string.Format(Resource.FromYearFormat, fromYear.StartYear);
+
+    private static string FormatSingleYear(CalendarFormat.SingleYear singleYear)
+        => string.Format(Resource.SingleYearFormat, singleYear.Year);
 }
