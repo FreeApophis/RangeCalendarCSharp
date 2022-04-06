@@ -70,7 +70,7 @@ internal static class ConsoleArguments
 
     private static Func<CultureInfo, bool> CultureIs(string cultureString)
         => culture
-            => culture.Name == cultureString;
+            => culture.Name.Equals(cultureString, StringComparison.InvariantCultureIgnoreCase);
 
     private static Option<Unit> GetStreamingMode(this IEnumerable<string> arguments)
         => arguments
