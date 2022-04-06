@@ -30,7 +30,7 @@ This talk was inspired by the [Component programming with ranges](https://wiki.d
 
 ## Features
 
-* Accepts a number, this is interpreted as the `year` of the calendar
+* Accepts one or two numbers, this is interpreted as the `year` of the calendar, or a from-to-range of years
 * Accepts Cultures as `en-GB` or `hu-HU` to localize the calendar correctly (no invariant cultures)
 * Add the parameter `stream` to have an endless stream starting with year
 * Add the parameter `fancy` to colorize the output, weekends are red, holidays have a redish backround.
