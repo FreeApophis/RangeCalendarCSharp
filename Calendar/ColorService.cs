@@ -11,7 +11,7 @@ internal class ColorService
             ? Color.OrangeRed
             : Color.LightGray;
 
-    public static Color DayColor(in DateTime day)
+    public static Color DayColor(DateOnly day)
         => IsHoliday(day)
             ? Color.FromArgb(127, 0, 0)
             : Color.Transparent;
@@ -21,13 +21,13 @@ internal class ColorService
             .GetWeekendProvider(ConsoleArguments.CountryFromCulture())
             .IsWeekend(day);
 
-    private static bool IsHoliday(DateTime day)
+    private static bool IsHoliday(DateOnly day)
         => DateSystem
             .GetPublicHolidayProvider(ConsoleArguments.CountryFromCulture())
             .Get(day.Year)
             .Any(IsSameDay(day));
 
-    private static Func<PublicHoliday, bool> IsSameDay(DateTime day)
+    private static Func<PublicHoliday, bool> IsSameDay(DateOnly day)
         => holiday
             => holiday.Date.DayOfYear == day.DayOfYear;
 }

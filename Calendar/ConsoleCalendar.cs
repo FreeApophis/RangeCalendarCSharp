@@ -8,7 +8,6 @@ namespace Calendar;
 internal static class ConsoleCalendar
 {
     private const int HorizontalMonths = 3;
-    private static readonly TimeSpan OneDay = new(1, 0, 0, 0);
     private static readonly Func<IEnumerable<IEnumerable<string>>, IEnumerable<string>> _joinLine = lines => lines.Select(JoinWithSpace);
     private static readonly Func<IEnumerable<IEnumerable<string>>, IEnumerable<IEnumerable<string>>> _transpose = months => months.Transpose();
 
@@ -37,22 +36,22 @@ internal static class ConsoleCalendar
     private static int SeparatorsBetweenMonths()
         => HorizontalMonths - 1;
 
-    private static IEnumerable<DateTime> GetDays(this CalendarFormat format)
+    private static IEnumerable<DateOnly> GetDays(this CalendarFormat format)
         => format.Match(
             singleYear: singleYear => DaysFrom(singleYear.Year).TakeWhile(day => day.Year == singleYear.Year),
             fromYear: fromYear => DaysFrom(fromYear.StartYear),
             yearRange: yearRange => DaysFrom(yearRange.StartYear).TakeWhile(day => day.Year <= yearRange.EndYear));
 
-    private static IEnumerable<DateTime> DaysFrom(int startYear)
+    private static IEnumerable<DateOnly> DaysFrom(int startYear)
         => Sequence.Successors(JanuaryFirst(startYear), NextDay);
 
-    private static DateTime NextDay(DateTime day)
-        => day + OneDay;
+    private static DateOnly NextDay(DateOnly day)
+        => day.AddDays(1);
 
-    private static DateTime JanuaryFirst(int fromYear)
+    private static DateOnly JanuaryFirst(int fromYear)
         => new(fromYear, 1, 1);
 
-    private static int ByMonth(DateTime date)
+    private static int ByMonth(DateOnly date)
         => date.Month;
 
     private static string JoinWithSpace(IEnumerable<string> parts)

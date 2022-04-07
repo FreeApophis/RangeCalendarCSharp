@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Globalization;
 using System.Text;
+using Funcky.Extensions;
 using Funcky.Monads;
 
 namespace Calendar;
@@ -22,41 +23,41 @@ internal class MonthLayouter
             .CurrentCulture
             .DateTimeFormat;
 
-    public static Reader<Environment, IEnumerable<string>> DefaultLayout(IEnumerable<DateTime> month)
+    public static Reader<Environment, IEnumerable<string>> DefaultLayout(IEnumerable<DateOnly> month)
             => from colorizedMonthName in ColorizedMonthName(month)
                from weekDayLine in WeekDayLine()
                from weeksInMonth in month
-                .GroupBy(GetWeekOfYear)
+                .AdjacentGroupBy(GetWeekOfYear)
                 .Select(FormatWeek)
                 .Sequence()
                select BuildDefaultLayout(colorizedMonthName, weekDayLine, weeksInMonth);
 
-    private static ImmutableList<string> BuildDefaultLayout(string colorizedMonthName, string weekDayLine, IEnumerable<string> weeks)
+    private static IEnumerable<string> BuildDefaultLayout(string colorizedMonthName, string weekDayLine, IEnumerable<string> weeks)
         => ImmutableList<string>.Empty
             .Add(colorizedMonthName)
             .Add(weekDayLine)
             .AddRange(weeks)
             .Add(Spaces(WidthOfWeek));
 
-    private static Reader<Environment, string> ColorizedMonthName(IEnumerable<DateTime> month)
+    private static Reader<Environment, string> ColorizedMonthName(IEnumerable<DateOnly> month)
         => from monthName in MonthName(month)
            from colorizedMonthName in monthName.Colorize(Color.White)
            select colorizedMonthName;
 
-    private static Reader<Environment, string> MonthName(IEnumerable<DateTime> month)
+    private static Reader<Environment, string> MonthName(IEnumerable<DateOnly> month)
         => from monthName in FormatMonthName(month.First())
            select monthName.Center(WidthOfWeek);
 
-    private static Reader<Environment, string> FormatMonthName(DateTime month)
+    private static Reader<Environment, string> FormatMonthName(DateOnly month)
         => environment
             => month
                 .ToString(environment.MonthFormat);
 
-    private static Reader<Environment, string> FormatWeek(IGrouping<int, DateTime> week)
+    private static Reader<Environment, string> FormatWeek(IGrouping<int, DateOnly> week)
         => from aggregateWeek in AggregateWeek(week)
            select PadWeek(aggregateWeek, week);
 
-    private static Reader<Environment, string> AggregateWeek(IEnumerable<DateTime> week)
+    private static Reader<Environment, string> AggregateWeek(IEnumerable<DateOnly> week)
         => from formatDay in week
             .Select(FormatDay)
             .Sequence()
@@ -68,7 +69,7 @@ internal class MonthLayouter
         => aggregate
             .Append(formattedString);
 
-    private static Reader<Environment, string> FormatDay(DateTime day)
+    private static Reader<Environment, string> FormatDay(DateOnly day)
         => from colorized in day
             .Day
             .ToString()
@@ -100,13 +101,13 @@ internal class MonthLayouter
         => CurrentDateTimeFormat
             .GetShortestDayName(dayOfWeek);
 
-    private static int GetWeekOfYear(DateTime dateTime)
+    private static int GetWeekOfYear(DateOnly dateTime)
         => CultureInfo
             .CurrentCulture
             .Calendar
-            .GetWeekOfYear(dateTime, CurrentDateTimeFormat.CalendarWeekRule, CurrentDateTimeFormat.FirstDayOfWeek);
+            .GetWeekOfYear(dateTime.ToDateTime(default), CurrentDateTimeFormat.CalendarWeekRule, CurrentDateTimeFormat.FirstDayOfWeek);
 
-    private static string PadWeek(string formattedWeek, IGrouping<int, DateTime> week)
+    private static string PadWeek(string formattedWeek, IGrouping<int, DateOnly> week)
         => StartsOnFirstDayOfWeek(week)
             ? formattedWeek + Spaces(EndOfWeekSpaces(week.Count()))
             : Spaces(BeginOfWeekSpaces(DaysInAWeek - week.Count())) + formattedWeek;
@@ -123,7 +124,7 @@ internal class MonthLayouter
             .Take(takeDays)
             .Sum(WidthOfWeekDay);
 
-    private static bool StartsOnFirstDayOfWeek(IGrouping<int, DateTime> week)
+    private static bool StartsOnFirstDayOfWeek(IEnumerable<DateOnly> week)
         => NthDayOfWeek(week.First().DayOfWeek) == 0;
 
     private static int WidthOfWeekDay(DayOfWeek day)
