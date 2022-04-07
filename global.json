@@ -1,8 +1,8 @@
 ﻿{
   "sdk": {
-    "version": "6.0.100"
+    "version": "6.0.200"
   },
   "msbuild-sdks": {
-    "Microsoft.Build.CentralPackageVersions": "2.0.52"
+    "Microsoft.Build.CentralPackageVersions": "2.1.3"
   }
 }
