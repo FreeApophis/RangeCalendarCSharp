@@ -1,13 +1,12 @@
 ﻿using System.Globalization;
 
-namespace Calendar
+namespace Calendar;
+
+public static class CultureHelper
 {
-    public static class CultureHelper
+    public static void SetAllCultures(CultureInfo cultureInfo)
     {
-        public static void SetAllCultures(CultureInfo cultureInfo)
-        {
-            CultureInfo.CurrentCulture = cultureInfo;
-            CultureInfo.CurrentUICulture = cultureInfo;
-        }
+        CultureInfo.CurrentCulture = cultureInfo;
+        CultureInfo.CurrentUICulture = cultureInfo;
     }
 }

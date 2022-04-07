@@ -3,7 +3,8 @@ using Funcky.Extensions;
 using static System.Console;
 using static Calendar.ConsoleArguments;
 
-GetCultureInfo(args)
+args
+    .GetCultureInfo()
     .AndThen(CultureHelper.SetAllCultures);
 
 var arrangePage = args

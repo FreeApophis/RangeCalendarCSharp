@@ -11,7 +11,7 @@ internal static class ConsoleArguments
 {
     private const int EndYearOffset = 1;
 
-    public static Option<CultureInfo> GetCultureInfo(IEnumerable<string> arguments)
+    public static Option<CultureInfo> GetCultureInfo(this IEnumerable<string> arguments)
         => arguments
             .SelectArgument(ToCultureInfo);
 
