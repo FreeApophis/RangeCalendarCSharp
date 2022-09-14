@@ -1,35 +1,31 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk; Microsoft.Build.CentralPackageVersions">
 
-	<PropertyGroup>
-		<OutputType>Exe</OutputType>
-		<TargetFramework>net6.0</TargetFramework>
-		<LangVersion>10.0</LangVersion>
-		<Nullable>enable</Nullable>
-		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-		<ImplicitUsings>enable</ImplicitUsings>
-	</PropertyGroup>
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net6.0</TargetFramework>
+    </PropertyGroup>
 
-	<ItemGroup>
-		<PackageReference Include="Funcky" />
-		<PackageReference Include="Funcky.Analyzers" PrivateAssets="all" />
-		<PackageReference Include="Funcky.DiscriminatedUnion" PrivateAssets="all" />
-		<PackageReference Include="Nager.Date" />
-		<PackageReference Include="Pastel" />
-	</ItemGroup>
-	<ItemGroup>
-		<InternalsVisibleTo Include="Calendar.Test" />
-	</ItemGroup>
-	<ItemGroup>
-	  <Compile Update="Resource.Designer.cs">
-	    <DesignTime>True</DesignTime>
-	    <AutoGen>True</AutoGen>
-	    <DependentUpon>Resource.resx</DependentUpon>
-	  </Compile>
-	</ItemGroup>
-	<ItemGroup>
-		<EmbeddedResource Update="Resource.resx">
-			<Generator>ResXFileCodeGenerator</Generator>
-			<LastGenOutput>Resource.Designer.cs</LastGenOutput>
-		</EmbeddedResource>
-	</ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Funcky" />
+        <PackageReference Include="Funcky.Analyzers" PrivateAssets="all" />
+        <PackageReference Include="Funcky.DiscriminatedUnion" PrivateAssets="all" />
+        <PackageReference Include="Nager.Date" />
+        <PackageReference Include="Pastel" />
+    </ItemGroup>
+    <ItemGroup>
+        <InternalsVisibleTo Include="Calendar.Test" />
+    </ItemGroup>
+    <ItemGroup>
+        <Compile Update="Resource.Designer.cs">
+            <DesignTime>True</DesignTime>
+            <AutoGen>True</AutoGen>
+            <DependentUpon>Resource.resx</DependentUpon>
+        </Compile>
+    </ItemGroup>
+    <ItemGroup>
+        <EmbeddedResource Update="Resource.resx">
+            <Generator>ResXFileCodeGenerator</Generator>
+            <LastGenOutput>Resource.Designer.cs</LastGenOutput>
+        </EmbeddedResource>
+    </ItemGroup>
 </Project>

@@ -1,39 +1,33 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk; Microsoft.Build.CentralPackageVersions">
 
-  <PropertyGroup>
-	  <TargetFramework>net6.0</TargetFramework>
-	  <LangVersion>10.0</LangVersion>
-	  <Nullable>enable</Nullable>
-	  <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-	  <ImplicitUsings>enable</ImplicitUsings>
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+    </PropertyGroup>
 
-	  <IsPackable>false</IsPackable>
-  </PropertyGroup>
+    <ItemGroup>
+        <None Remove="TestData\Calendar2000deCH" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <None Remove="TestData\Calendar2000deCH" />
-  </ItemGroup>
+    <ItemGroup>
+        <EmbeddedResource Include="TestData\Calendar2000deCH" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Include="TestData\Calendar2000deCH" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" />
+        <PackageReference Include="xunit" />
+        <PackageReference Include="xunit.runner.visualstudio" >
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+        <PackageReference Include="coverlet.collector" >
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+        <PackageReference Include="Funcky.XUnit" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" />
-    <PackageReference Include="xunit" />
-    <PackageReference Include="xunit.runner.visualstudio" >
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="coverlet.collector" >
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="Funcky.XUnit" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Calendar\Calendar.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Calendar\Calendar.csproj" />
+    </ItemGroup>
 
 </Project>

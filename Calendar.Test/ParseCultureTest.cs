@@ -14,7 +14,7 @@ public class ParseCultureTest
     public static TheoryData<string[], Option<CultureInfo>> GetDifferentProgramInputs()
         => new()
         {
-            { Array.Empty<string>(), Option<CultureInfo>.None() },
+            { Array.Empty<string>(), Option<CultureInfo>.None },
             { new[] { "de-de" }, Option.Some(new CultureInfo("de-DE")) },
             { new[] { "2020", "de-de" }, Option.Some(new CultureInfo("de-DE")) },
             { new[] { "2000", "2005", "de-de", "fancy" }, Option.Some(new CultureInfo("de-DE")) },
@@ -22,6 +22,6 @@ public class ParseCultureTest
             { new[] { "en-US", "de-de" }, Option.Some(new CultureInfo("en-US")) },
             { new[] { "de" }, Option.Some(new CultureInfo("de")) },
             { new[] { "ja-JP" }, Option.Some(new CultureInfo("ja-JP")) },
-            { new[] { "something", "different", "fancy" }, Option<CultureInfo>.None() },
+            { new[] { "something", "different", "fancy" }, Option<CultureInfo>.None },
         };
 }

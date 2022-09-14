@@ -16,7 +16,7 @@ internal static class ConsoleArguments
             .SelectArgument(ToCultureInfo);
 
     public static Environment GetEnvironment(IEnumerable<string> arguments)
-        => new(arguments.GetFancyMode().Match(false, True), "MMMM yyyy");
+        => new(arguments.GetFancyMode().Match(none: false, some: True), "MMMM yyyy");
 
     public static CountryCode CountryFromCulture()
         => TwoLetterIsoRegionNameFromCulture()
@@ -53,12 +53,12 @@ internal static class ConsoleArguments
             => new CalendarFormat.FromYear(arguments.StartYear());
 
     private static int StartYear(this IEnumerable<string> arguments)
-        => SelectArgument(arguments, ParseExtensions.ParseIntOrNone)
+        => SelectArgument(arguments, ParseExtensions.ParseInt32OrNone)
             .GetOrElse(DateTime.Now.Year);
 
     private static Option<int> EndYear(this IEnumerable<string> arguments)
         => arguments
-            .WhereSelect(ParseExtensions.ParseIntOrNone)
+            .WhereSelect(ParseExtensions.ParseInt32OrNone)
             .Skip(EndYearOffset)
             .FirstOrNone();
 

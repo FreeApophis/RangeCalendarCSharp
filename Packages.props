@@ -1,23 +1,23 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<ItemGroup Label="Runtime Dependencies">
-		<PackageReference Update="Funcky" Version="[2.6.0, 3)" />
-		<PackageReference Update="Nager.Date" Version="1.29.2" />
-		<PackageReference Update="Pastel" Version="2.1.0" />
+		<PackageReference Update="Funcky" Version="[3.0.0, 4.0.0)" />
+		<PackageReference Update="Nager.Date" Version="1.36.1" />
+		<PackageReference Update="Pastel" Version="3.0.1" />
 
 	</ItemGroup>
 
 	<ItemGroup Label="Build Dependencies">
-		<PackageReference Update="Messerli.CodeStyle" Version="[2.1.0, 3)" />
-		<PackageReference Update="Funcky.Analyzers" Version="1.0.0" />
-		<PackageReference Update="Funcky.DiscriminatedUnion" Version="0.1.0" />
+		<PackageReference Update="Messerli.CodeStyle" Version="[2.1.3, 3)" />
+		<PackageReference Update="Funcky.Analyzers" Version="1.1.0" />
+		<PackageReference Update="Funcky.DiscriminatedUnion" Version="1.0.0" />
 	</ItemGroup>
 
 	<ItemGroup Label="Test Dependencies">
-		<PackageReference Update="Microsoft.NET.Test.Sdk" Version="16.10.0" />
-		<PackageReference Update="xunit" Version="2.4.1" />
-		<PackageReference Update="xunit.runner.visualstudio" Version="2.4.3" />
-		<PackageReference Update="Funcky.Xunit" Version="0.1.3" />
-		<PackageReference Update="coverlet.collector" Version="3.1.0" />
+		<PackageReference Update="Microsoft.NET.Test.Sdk" Version="17.3.1" />
+		<PackageReference Update="xunit" Version="2.4.2" />
+		<PackageReference Update="xunit.runner.visualstudio" Version="2.4.5" />
+		<PackageReference Update="Funcky.Xunit" Version="1.0.0" />
+		<PackageReference Update="coverlet.collector" Version="3.1.2" />
 	</ItemGroup>
 </Project>

@@ -1,5 +1,5 @@
 using System.Globalization;
-using Funcky.DataTypes;
+using Funcky;
 using Funcky.Extensions;
 using Xunit;
 using static Funcky.Functional;
