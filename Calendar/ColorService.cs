@@ -4,8 +4,11 @@ using Nager.Date.Model;
 
 namespace Calendar;
 
-internal class ColorService
+internal static class ColorService
 {
+    static ColorService()
+        => DateSystem.LicenseKey = "LostTimeIsNeverFoundAgain";
+
     public static Color WeekDayColor(DayOfWeek day)
         => IsWeekend(day)
             ? Color.OrangeRed
