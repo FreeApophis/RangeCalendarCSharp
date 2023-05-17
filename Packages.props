@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<ItemGroup Label="Runtime Dependencies">
-		<PackageReference Update="Funcky" Version="[3.0.0, 4.0.0)" />
+		<PackageReference Update="Funcky" Version="[3.2.0, 4.0.0)" />
 		<PackageReference Update="Nager.Date" Version="1.36.1" />
 		<PackageReference Update="Pastel" Version="3.0.1" />
 
