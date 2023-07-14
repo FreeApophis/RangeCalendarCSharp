@@ -13,8 +13,11 @@ public class ArrangeCalendarPageTest
     {
         CultureHelper.SetAllCultures(new CultureInfo("de-CH"));
 
-        var arrangePage = ConsoleCalendar.ArrangeCalendarPage(new CalendarFormat.SingleYear(2000));
-        var result = arrangePage(new Environment(false, "MMMM yyyy")).ToList();
+        var arrangePage = new CalendarFormat
+            .SingleYear(2000)
+            .ArrangeCalendarPage();
+
+        var result = arrangePage(new Environment(false, "MMMM yyyy")).Materialize();
 
         CheckEquality(TestData.ReadLines("Calendar2000deCH"), result);
     }

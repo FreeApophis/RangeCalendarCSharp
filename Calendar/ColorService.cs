@@ -27,6 +27,7 @@ internal static class ColorService
     private static bool IsHoliday(DateOnly day)
         => DateSystem
             .GetPublicHolidayProvider(ConsoleArguments.CountryFromCulture())
+
             .Get(day.Year)
             .Any(IsSameDay(day));
 
