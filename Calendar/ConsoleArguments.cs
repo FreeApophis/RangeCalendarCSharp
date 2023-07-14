@@ -1,9 +1,9 @@
-﻿using System.Globalization;
+﻿#pragma warning disable SA1010 // list pattern not supported
+using System.Globalization;
 using Funcky;
 using Funcky.Extensions;
 using Funcky.Monads;
 using Nager.Date;
-using static Funcky.Functional;
 
 namespace Calendar;
 
@@ -16,7 +16,7 @@ internal static class ConsoleArguments
             .SelectArgument(ToCultureInfo);
 
     public static Environment GetEnvironment(IEnumerable<string> arguments)
-        => new(arguments.GetFancyMode().Match(none: false, some: True), "MMMM yyyy");
+        => new(arguments.GetFancyMode() is [_], "MMMM yyyy");
 
     public static CountryCode CountryFromCulture()
         => TwoLetterIsoRegionNameFromCulture()
