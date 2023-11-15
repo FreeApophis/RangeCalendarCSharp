@@ -1,5 +1,4 @@
-﻿#pragma warning disable SA1010 // list pattern not supported
-using System.Globalization;
+﻿using System.Globalization;
 using Funcky;
 using Funcky.Extensions;
 using Funcky.Monads;

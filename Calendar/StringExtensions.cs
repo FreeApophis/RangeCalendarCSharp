@@ -34,10 +34,10 @@ internal static class StringExtensions
 
     private static Reader<Environment, bool> ShouldColorize(Color color)
         => environment
-            => color != Color.Transparent && environment.IsFancy;
+            => environment is { IsFancy: true } && color != Color.Transparent;
 
     private static string FormatYearRange(CalendarFormat.YearRange yearRange)
-    => string.Format(Resource.YearRangeFormat, yearRange.StartYear, yearRange.EndYear);
+        => string.Format(Resource.YearRangeFormat, yearRange.StartYear, yearRange.EndYear);
 
     private static string FormatFromYear(CalendarFormat.FromYear fromYear)
         => string.Format(Resource.FromYearFormat, fromYear.StartYear);

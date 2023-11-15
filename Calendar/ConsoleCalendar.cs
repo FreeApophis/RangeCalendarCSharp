@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿#pragma warning disable SA1010 // Opening square brackets should be spaced correctly
+using System.Drawing;
 using Funcky;
 using Funcky.Extensions;
 using Funcky.Monads;
@@ -8,8 +9,8 @@ namespace Calendar;
 internal static class ConsoleCalendar
 {
     private const int HorizontalMonths = 3;
-    private static readonly Func<IEnumerable<IEnumerable<string>>, IEnumerable<string>> _joinLine = lines => lines.Select(JoinWithSpace);
-    private static readonly Func<IEnumerable<IEnumerable<string>>, IEnumerable<IEnumerable<string>>> _transpose = months => months.Transpose();
+    private static readonly Func<IEnumerable<IEnumerable<string>>, IEnumerable<string>> JoinLine = lines => lines.Select(JoinWithSpace);
+    private static readonly Func<IEnumerable<IEnumerable<string>>, IEnumerable<IEnumerable<string>>> Transpose = months => months.Transpose();
 
     private static int CalendarWidth
         => (HorizontalMonths * MonthLayouter.WidthOfWeek) + SeparatorsBetweenMonths();
@@ -22,7 +23,7 @@ internal static class ConsoleCalendar
             .Sequence()
            let calendar = layout
             .Chunk(HorizontalMonths)
-            .SelectMany(_joinLine.Compose(_transpose))
+            .SelectMany(JoinLine.Compose(Transpose))
            select Sequence.Concat(title, calendar);
 
     private static Reader<Environment, IEnumerable<string>> GetTitle(this CalendarFormat format)
@@ -30,17 +31,30 @@ internal static class ConsoleCalendar
             .ApplyCalendarFormat()
             .Center(CalendarWidth)
             .Colorize(Color.Yellow)
-           select Sequence
-            .Return(string.Empty, title, string.Empty);
+           select TitleFormat(title);
+
+    private static IReadOnlyList<string> TitleFormat(string title)
+        => [string.Empty, title, string.Empty];
 
     private static int SeparatorsBetweenMonths()
         => HorizontalMonths - 1;
 
     private static IEnumerable<DateOnly> GetDays(this CalendarFormat format)
         => format.Match(
-            singleYear: singleYear => DaysFrom(singleYear.Year).TakeWhile(day => day.Year == singleYear.Year),
-            fromYear: fromYear => DaysFrom(fromYear.StartYear),
-            yearRange: yearRange => DaysFrom(yearRange.StartYear).TakeWhile(day => day.Year <= yearRange.EndYear));
+            singleYear: DaysOfSingleYear,
+            fromYear: DaysStartingWithYear,
+            yearRange: DaysOfYearRange);
+
+    private static IEnumerable<DateOnly> DaysOfYearRange(CalendarFormat.YearRange yearRange)
+        => DaysFrom(yearRange.StartYear)
+            .TakeWhile(day => day.Year <= yearRange.EndYear);
+
+    private static IEnumerable<DateOnly> DaysStartingWithYear(CalendarFormat.FromYear fromYear)
+        => DaysFrom(fromYear.StartYear);
+
+    private static IEnumerable<DateOnly> DaysOfSingleYear(CalendarFormat.SingleYear singleYear)
+        => DaysFrom(singleYear.Year)
+            .TakeWhile(day => day.Year == singleYear.Year);
 
     private static IEnumerable<DateOnly> DaysFrom(int startYear)
         => Sequence.Successors(JanuaryFirst(startYear), NextDay);

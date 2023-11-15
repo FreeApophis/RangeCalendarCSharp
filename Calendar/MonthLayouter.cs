@@ -12,6 +12,7 @@ internal class MonthLayouter
     private const int RowSeparationSpace = 1;
     private const int MinDayWidth = 3;
     private const int DaysInAWeek = 7;
+    private const int FirstDay = 0;
     private const char SpaceCharacter = ' ';
 
     public static int WidthOfWeek
@@ -125,7 +126,7 @@ internal class MonthLayouter
             .Sum(WidthOfWeekDay);
 
     private static bool StartsOnFirstDayOfWeek(IEnumerable<DateOnly> week)
-        => NthDayOfWeek(week.First().DayOfWeek) == 0;
+        => NthDayOfWeek(week.First().DayOfWeek) is FirstDay;
 
     private static int WidthOfWeekDay(DayOfWeek day)
         => Math

@@ -1,9 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+  </PropertyGroup>
   <ItemGroup Label="Runtime Dependencies">
     <PackageVersion Include="Funcky" Version="[3.3.0, 4.0.0)" />
-    <PackageVersion Include="Nager.Date" Version="1.36.1" />
-    <PackageVersion Include="Pastel" Version="4.1.0" />
+    <PackageVersion Include="Nager.Date" Version="1.46.0" />
+    <PackageVersion Include="Pastel" Version="4.2.0" />
   </ItemGroup>
   <ItemGroup Label="Build Dependencies">
     <PackageVersion Include="Messerli.CodeStyle" Version="2.3.0" />
@@ -11,10 +14,10 @@
     <PackageVersion Include="Funcky.DiscriminatedUnion" Version="1.1.0" />
   </ItemGroup>
   <ItemGroup Label="Test Dependencies">
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.6.0" />
-    <PackageVersion Include="xunit" Version="2.4.2" />
-    <PackageVersion Include="xunit.runner.visualstudio" Version="2.4.5" />
-    <PackageVersion Include="Funcky.Xunit" Version="1.0.0" />
-    <PackageVersion Include="coverlet.collector" Version="3.1.2" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
+    <PackageVersion Include="xunit" Version="2.6.1" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="2.5.3" />
+    <PackageVersion Include="Funcky.Xunit" Version="2.0.1" />
+    <PackageVersion Include="coverlet.collector" Version="6.0.0" />
   </ItemGroup>
 </Project>
