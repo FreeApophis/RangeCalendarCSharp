@@ -118,12 +118,12 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="FromYearFormat" xml:space="preserve">
-    <value>Calendar stream starting from {0}</value>
+    <value>Perpetual calendar starting from {0}</value>
   </data>
   <data name="SingleYearFormat" xml:space="preserve">
     <value>Calendar of {0}</value>
   </data>
   <data name="YearRangeFormat" xml:space="preserve">
-    <value>Calender from {0} to {1}</value>
+    <value>Calendar from {0} to {1}</value>
   </data>
 </root>
