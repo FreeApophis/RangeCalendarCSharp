@@ -4,7 +4,7 @@
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
   <ItemGroup Label="Runtime Dependencies">
-    <PackageVersion Include="Funcky" Version="[3.3.0, 4.0.0)" />
+    <PackageVersion Include="Funcky" Version="[3.4.0, 4.0.0)" />
     <PackageVersion Include="Nager.Date" Version="1.46.0" />
     <PackageVersion Include="Pastel" Version="4.2.0" />
   </ItemGroup>
