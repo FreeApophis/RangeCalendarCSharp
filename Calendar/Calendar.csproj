@@ -2,18 +2,22 @@
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
-        <TargetFramework>net8.0</TargetFramework>
+        <TargetFramework>net9.0</TargetFramework>
     </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="Funcky" />
         <PackageReference Include="Funcky.Analyzers" PrivateAssets="all" />
         <PackageReference Include="Funcky.DiscriminatedUnion" PrivateAssets="all" />
-        <PackageReference Include="Nager.Date" />
         <PackageReference Include="Pastel" />
     </ItemGroup>
     <ItemGroup>
         <InternalsVisibleTo Include="Calendar.Test" />
+    </ItemGroup>
+    <ItemGroup>
+      <Reference Include="Nager.Date">
+        <HintPath>Nager.Date.dll</HintPath>
+      </Reference>
     </ItemGroup>
     <ItemGroup>
         <Compile Update="Resource.Designer.cs">

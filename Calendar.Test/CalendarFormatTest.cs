@@ -1,4 +1,5 @@
-﻿using Xunit;
+﻿#pragma warning disable SA1010 // Opening square brackets should be spaced correctly
+using Xunit;
 
 namespace Calendar.Test;
 
@@ -12,16 +13,16 @@ public class CalendarFormatTest
     public static TheoryData<string[], CalendarFormat> GetDifferentProgramInputs()
         => new()
         {
-            { Array.Empty<string>(), new CalendarFormat.SingleYear(DateTime.Now.Year) },
-            { new[] { "2020" }, new CalendarFormat.SingleYear(2020) },
-            { new[] { "2020", "2020" }, new CalendarFormat.SingleYear(2020) },
-            { new[] { "fancy" }, new CalendarFormat.SingleYear(DateTime.Now.Year) },
-            { new[] { "stream" }, new CalendarFormat.FromYear(DateTime.Now.Year) },
-            { new[] { "2005", "2001" }, new CalendarFormat.SingleYear(2005) },
-            { new[] { "2000", "2005" }, new CalendarFormat.YearRange(2000, 2005) },
-            { new[] { "2000", "stream" }, new CalendarFormat.FromYear(2000) },
-            { new[] { "2005", "2020", "stream" }, new CalendarFormat.FromYear(2005) },
-            { new[] { "2020", "2020", "stream" }, new CalendarFormat.FromYear(2020) },
-            { new[] { "something", "different", "fancy" }, new CalendarFormat.SingleYear(DateTime.Now.Year) },
+            { [], new CalendarFormat.SingleYear(DateTime.Now.Year) },
+            { ["2020"], new CalendarFormat.SingleYear(2020) },
+            { ["2020", "2020"], new CalendarFormat.SingleYear(2020) },
+            { ["fancy"], new CalendarFormat.SingleYear(DateTime.Now.Year) },
+            { ["stream"], new CalendarFormat.FromYear(DateTime.Now.Year) },
+            { ["2005", "2001"], new CalendarFormat.SingleYear(2005) },
+            { ["2000", "2005"], new CalendarFormat.YearRange(2000, 2005) },
+            { ["2000", "stream"], new CalendarFormat.FromYear(2000) },
+            { ["2005", "2020", "stream"], new CalendarFormat.FromYear(2005) },
+            { ["2020", "2020", "stream"], new CalendarFormat.FromYear(2020) },
+            { ["something", "different", "fancy"], new CalendarFormat.SingleYear(DateTime.Now.Year) },
         };
 }
