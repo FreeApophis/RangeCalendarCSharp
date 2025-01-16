@@ -1,14 +1,11 @@
 ﻿using System.Drawing;
 using Nager.Date;
-using Nager.Date.Model;
+using Nager.Date.Models;
 
 namespace Calendar;
 
 internal static class ColorService
 {
-    static ColorService()
-        => DateSystem.LicenseKey = "LostTimeIsNeverFoundAgain";
-
     public static Color WeekDayColor(DayOfWeek day)
         => IsWeekend(day)
             ? Color.OrangeRed
@@ -20,17 +17,17 @@ internal static class ColorService
             : Color.Transparent;
 
     private static bool IsWeekend(DayOfWeek day)
-        => DateSystem
+        => WeekendSystem
             .GetWeekendProvider(ConsoleArguments.CountryFromCulture())
             .IsWeekend(day);
 
     private static bool IsHoliday(DateOnly day)
-        => DateSystem
-            .GetPublicHolidayProvider(ConsoleArguments.CountryFromCulture())
+        => HolidaySystem
+            .GetHolidayProvider(ConsoleArguments.CountryFromCulture())
             .GetHolidays(day.Year)
             .Any(IsSameDay(day));
 
-    private static Func<PublicHoliday, bool> IsSameDay(DateOnly day)
+    private static Func<Holiday, bool> IsSameDay(DateOnly day)
         => holiday
             => holiday.Date.DayOfYear == day.DayOfYear;
 }
