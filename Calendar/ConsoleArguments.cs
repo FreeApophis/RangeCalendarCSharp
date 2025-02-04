@@ -90,5 +90,12 @@ internal static class ConsoleArguments
             => Option.FromBoolean(argument == givenArgument);
 
     private static string TwoLetterIsoRegionNameFromCulture()
-        => new RegionInfo(CultureInfo.CurrentCulture.LCID).TwoLetterISORegionName;
+        => CultureInfo.CurrentCulture.CultureTypes.HasFlag(CultureTypes.UserCustomCulture)
+            ? FallBackTwoLetterISORegionName()
+            : new RegionInfo(CultureInfo.CurrentCulture.LCID).TwoLetterISORegionName;
+
+    private static string FallBackTwoLetterISORegionName()
+        => CultureInfo.CurrentCulture.Name
+            .SplitLazy('-')
+            .Last();
 }
