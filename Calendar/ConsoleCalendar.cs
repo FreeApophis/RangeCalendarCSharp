@@ -8,6 +8,33 @@ namespace Calendar;
 
 internal static class ConsoleCalendar
 {
+    extension(CalendarFormat format)
+    {
+        public Reader<Environment, IEnumerable<string>> ArrangeCalendarPage()
+            => from title in format.GetTitle()
+               from layout in format.GetDays()
+                   .AdjacentGroupBy(ByMonth)
+                   .Select(MonthLayouter.DefaultLayout)
+                   .Sequence()
+               let calendar = layout
+                   .Chunk(HorizontalMonths)
+                   .SelectMany(JoinLine.Compose(Transpose))
+               select Sequence.Concat(title, calendar);
+
+        private Reader<Environment, IEnumerable<string>> GetTitle()
+            => from title in format
+                    .ApplyCalendarFormat()
+                    .Center(CalendarWidth)
+                    .Colorize(Color.Yellow)
+               select TitleFormat(title);
+
+        private IEnumerable<DateOnly> GetDays()
+            => format.Match(
+                singleYear: DaysOfSingleYear,
+                fromYear: DaysStartingWithYear,
+                yearRange: DaysOfYearRange);
+    }
+
     private const int HorizontalMonths = 3;
     private static readonly Func<IEnumerable<IEnumerable<string>>, IEnumerable<string>> JoinLine = lines => lines.Select(JoinWithSpace);
     private static readonly Func<IEnumerable<IEnumerable<string>>, IEnumerable<IEnumerable<string>>> Transpose = months => months.Transpose();
@@ -15,35 +42,11 @@ internal static class ConsoleCalendar
     private static int CalendarWidth
         => (HorizontalMonths * MonthLayouter.WidthOfWeek) + SeparatorsBetweenMonths();
 
-    public static Reader<Environment, IEnumerable<string>> ArrangeCalendarPage(this CalendarFormat format)
-        => from title in format.GetTitle()
-           from layout in format.GetDays()
-            .AdjacentGroupBy(ByMonth)
-            .Select(MonthLayouter.DefaultLayout)
-            .Sequence()
-           let calendar = layout
-            .Chunk(HorizontalMonths)
-            .SelectMany(JoinLine.Compose(Transpose))
-           select Sequence.Concat(title, calendar);
-
-    private static Reader<Environment, IEnumerable<string>> GetTitle(this CalendarFormat format)
-        => from title in format
-            .ApplyCalendarFormat()
-            .Center(CalendarWidth)
-            .Colorize(Color.Yellow)
-           select TitleFormat(title);
-
     private static IReadOnlyList<string> TitleFormat(string title)
         => [string.Empty, title, string.Empty];
 
     private static int SeparatorsBetweenMonths()
         => HorizontalMonths - 1;
-
-    private static IEnumerable<DateOnly> GetDays(this CalendarFormat format)
-        => format.Match(
-            singleYear: DaysOfSingleYear,
-            fromYear: DaysStartingWithYear,
-            yearRange: DaysOfYearRange);
 
     private static IEnumerable<DateOnly> DaysOfYearRange(CalendarFormat.YearRange yearRange)
         => DaysFrom(yearRange.StartYear)

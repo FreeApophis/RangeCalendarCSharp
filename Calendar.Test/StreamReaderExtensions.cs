@@ -5,9 +5,12 @@ namespace Calendar.Test;
 
 public static class StreamReaderExtensions
 {
-    public static IEnumerable<string> ReadLines(this StreamReader streamReader)
-        => Sequence
-            .Successors(ReadLineOrNone(streamReader), NextLine(streamReader));
+    extension(StreamReader streamReader)
+    {
+        public IEnumerable<string> ReadLines()
+            => Sequence
+                .Successors(ReadLineOrNone(streamReader), NextLine(streamReader));
+    }
 
     private static Func<string, Option<string>> NextLine(StreamReader streamReader)
         => _

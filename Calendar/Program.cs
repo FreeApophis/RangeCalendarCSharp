@@ -13,3 +13,16 @@ var arrangePage = args
 
 arrangePage(GetEnvironment(args))
     .ForEach(WriteLine);
+
+await foreach (var val in Test(args).Intersperse("---"))
+{
+    WriteLine(val);
+}
+
+async IAsyncEnumerable<string> Test(string[] args)
+{
+    foreach (var arg in args)
+    {
+        yield return arg;
+    }
+}

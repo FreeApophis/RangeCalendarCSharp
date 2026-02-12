@@ -8,11 +8,52 @@ namespace Calendar;
 
 internal static class ConsoleArguments
 {
-    private const int EndYearOffset = 1;
+    extension(IEnumerable<string> arguments)
+    {
+        public Option<CultureInfo> GetCultureInfo()
+            => arguments
+                .SelectArgument(ToCultureInfo);
 
-    public static Option<CultureInfo> GetCultureInfo(this IEnumerable<string> arguments)
-        => arguments
-            .SelectArgument(ToCultureInfo);
+        public CalendarFormat GetCalendarFormat()
+            => arguments
+                .GetStreamingMode()
+                .Match(
+                    none: FixedCalendarFormat(arguments),
+                    some: StreamingCalendarFormat(arguments));
+
+    }
+
+    extension(IEnumerable<string> arguments)
+    {
+        private int StartYear()
+            => SelectArgument(arguments, ParseExtensions.ParseInt32OrNone)
+                .GetOrElse(DateTime.Now.Year);
+
+        private Option<int> EndYear()
+            => arguments
+                .WhereSelect(ParseExtensions.ParseInt32OrNone)
+                .Skip(EndYearOffset)
+                .FirstOrNone();
+    }
+
+    extension(IEnumerable<string> arguments)
+    {
+        private Option<Unit> GetStreamingMode()
+            => arguments
+                .SelectArgument(HasArgument("stream"));
+
+        private Option<Unit> GetFancyMode()
+            => arguments
+                .SelectArgument(HasArgument("fancy"));
+
+        private Option<T> SelectArgument<T>(Func<string, Option<T>> selector)
+            where T : notnull
+            => arguments
+                .WhereSelect(selector)
+                .FirstOrNone();
+    }
+
+    private const int EndYearOffset = 1;
 
     public static Environment GetEnvironment(IEnumerable<string> arguments)
         => new(arguments.GetFancyMode() is [_], "MMMM yyyy");
@@ -21,13 +62,6 @@ internal static class ConsoleArguments
         => TwoLetterIsoRegionNameFromCulture()
             .ParseEnumOrNone<CountryCode>()
             .GetOrElse(() => throw new Exception("Unknown country code"));
-
-    public static CalendarFormat GetCalendarFormat(this IEnumerable<string> arguments)
-        => arguments
-            .GetStreamingMode()
-            .Match(
-                none: FixedCalendarFormat(arguments),
-                some: StreamingCalendarFormat(arguments));
 
     private static Func<CalendarFormat> FixedCalendarFormat(IEnumerable<string> arguments)
         => ()
@@ -51,16 +85,6 @@ internal static class ConsoleArguments
         => _
             => new CalendarFormat.FromYear(arguments.StartYear());
 
-    private static int StartYear(this IEnumerable<string> arguments)
-        => SelectArgument(arguments, ParseExtensions.ParseInt32OrNone)
-            .GetOrElse(DateTime.Now.Year);
-
-    private static Option<int> EndYear(this IEnumerable<string> arguments)
-        => arguments
-            .WhereSelect(ParseExtensions.ParseInt32OrNone)
-            .Skip(EndYearOffset)
-            .FirstOrNone();
-
     private static Option<CultureInfo> ToCultureInfo(string cultureString)
         => CultureInfo
             .GetCultures(CultureTypes.AllCultures)
@@ -70,20 +94,6 @@ internal static class ConsoleArguments
     private static Func<CultureInfo, bool> CultureIs(string cultureString)
         => culture
             => culture.Name.Equals(cultureString, StringComparison.InvariantCultureIgnoreCase);
-
-    private static Option<Unit> GetStreamingMode(this IEnumerable<string> arguments)
-        => arguments
-            .SelectArgument(HasArgument("stream"));
-
-    private static Option<Unit> GetFancyMode(this IEnumerable<string> arguments)
-        => arguments
-            .SelectArgument(HasArgument("fancy"));
-
-    private static Option<T> SelectArgument<T>(this IEnumerable<string> arguments, Func<string, Option<T>> selector)
-        where T : notnull
-        => arguments
-            .WhereSelect(selector)
-            .FirstOrNone();
 
     private static Func<string, Option<Unit>> HasArgument(string givenArgument)
         => argument

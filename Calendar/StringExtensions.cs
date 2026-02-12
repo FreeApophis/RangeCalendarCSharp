@@ -6,31 +6,37 @@ namespace Calendar;
 
 internal static class StringExtensions
 {
-    public static string Center(this string text, int width)
-        => (width - text.Length) switch
-        {
-            0 => text,
-            1 => $" {text}",
-            _ => Center($" {text} ", width),
-        };
+    extension(string text)
+    {
+        public string Center(int width)
+            => (width - text.Length) switch
+            {
+                0 => text,
+                1 => $" {text}",
+                _ => Center($" {text} ", width),
+            };
 
-    public static string ApplyCalendarFormat(this CalendarFormat calendarFormat)
-        => calendarFormat.Match(
-            singleYear: FormatSingleYear,
-            fromYear: FormatFromYear,
-            yearRange: FormatYearRange);
+        public Reader<Environment, string> Colorize(Color color)
+            => from shouldColorize in ShouldColorize(color)
+               select shouldColorize
+                   ? text.Pastel(color)
+                   : text;
 
-    public static Reader<Environment, string> Colorize(this string input, Color color)
-        => from shouldColorize in ShouldColorize(color)
-           select shouldColorize
-                ? input.Pastel(color)
-                : input;
+        public Reader<Environment, string> ColorizeBg(Color color)
+            => from shouldColorize in ShouldColorize(color)
+               select shouldColorize
+                   ? text.PastelBg(color)
+                   : text;
+    }
 
-    public static Reader<Environment, string> ColorizeBg(this string input, Color color)
-        => from shouldColorize in ShouldColorize(color)
-           select shouldColorize
-                ? input.PastelBg(color)
-                : input;
+    extension(CalendarFormat calendarFormat)
+    {
+        public string ApplyCalendarFormat()
+            => calendarFormat.Match(
+                singleYear: FormatSingleYear,
+                fromYear: FormatFromYear,
+                yearRange: FormatYearRange);
+    }
 
     private static Reader<Environment, bool> ShouldColorize(Color color)
         => environment
