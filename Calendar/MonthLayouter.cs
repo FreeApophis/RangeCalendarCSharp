@@ -16,7 +16,7 @@ internal class MonthLayouter
     private const char SpaceCharacter = ' ';
 
     public static int WidthOfWeek
-        => WeekDays()
+        => Enum.GetValues<DayOfWeek>()
             .Sum(WidthOfWeekDay);
 
     private static DateTimeFormatInfo CurrentDateTimeFormat
@@ -81,7 +81,7 @@ internal class MonthLayouter
            select background;
 
     private static Reader<Environment, string> WeekDayLine()
-        => from weekDays in WeekDays()
+        => from weekDays in Enum.GetValues<DayOfWeek>()
             .OrderBy(NthDayOfWeek)
             .Select(FormattedWeekDay)
             .Sequence()
@@ -92,11 +92,6 @@ internal class MonthLayouter
         => ToShortestDayName(day)
             .PadLeft(WidthOfWeekDay(day))
             .Colorize(ColorService.WeekDayColor(day));
-
-    private static IEnumerable<DayOfWeek> WeekDays()
-        => Enum
-            .GetValues(typeof(DayOfWeek))
-            .Cast<DayOfWeek>();
 
     private static string ToShortestDayName(DayOfWeek dayOfWeek)
         => CurrentDateTimeFormat
@@ -114,13 +109,13 @@ internal class MonthLayouter
             : Spaces(BeginOfWeekSpaces(DaysInAWeek - week.Count())) + formattedWeek;
 
     private static int EndOfWeekSpaces(int skipDays)
-        => WeekDays()
+        => Enum.GetValues<DayOfWeek>()
             .OrderBy(NthDayOfWeek)
             .Skip(skipDays)
             .Sum(WidthOfWeekDay);
 
     private static int BeginOfWeekSpaces(int takeDays)
-        => WeekDays()
+        => Enum.GetValues<DayOfWeek>()
             .OrderBy(NthDayOfWeek)
             .Take(takeDays)
             .Sum(WidthOfWeekDay);
