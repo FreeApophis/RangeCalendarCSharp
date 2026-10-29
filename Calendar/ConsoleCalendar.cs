@@ -8,6 +8,10 @@ namespace Calendar;
 
 internal static class ConsoleCalendar
 {
+    private const int HorizontalMonths = 3;
+    private static readonly Func<IEnumerable<IEnumerable<string>>, IEnumerable<string>> JoinLine = lines => lines.Select(JoinWithSpace);
+    private static readonly Func<IEnumerable<IEnumerable<string>>, IEnumerable<IEnumerable<string>>> Transpose = months => months.Transpose();
+
     extension(CalendarFormat format)
     {
         public Reader<Environment, IEnumerable<string>> ArrangeCalendarPage()
@@ -35,10 +39,6 @@ internal static class ConsoleCalendar
                 yearRange: DaysOfYearRange);
     }
 
-    private const int HorizontalMonths = 3;
-    private static readonly Func<IEnumerable<IEnumerable<string>>, IEnumerable<string>> JoinLine = lines => lines.Select(JoinWithSpace);
-    private static readonly Func<IEnumerable<IEnumerable<string>>, IEnumerable<IEnumerable<string>>> Transpose = months => months.Transpose();
-
     private static int CalendarWidth
         => (HorizontalMonths * MonthLayouter.WidthOfWeek) + SeparatorsBetweenMonths();
 
@@ -60,7 +60,7 @@ internal static class ConsoleCalendar
             .TakeWhile(day => day.Year == singleYear.Year);
 
     private static IEnumerable<DateOnly> DaysFrom(int startYear)
-        => Sequence.Successors(JanuaryFirst(startYear), NextDay);
+        => Enumerable.Successors(JanuaryFirst(startYear), NextDay);
 
     private static DateOnly NextDay(DateOnly day)
         => day.AddDays(1);

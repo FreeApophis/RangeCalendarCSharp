@@ -8,6 +8,8 @@ namespace Calendar;
 
 internal static class ConsoleArguments
 {
+    private const int EndYearOffset = 1;
+
     extension(IEnumerable<string> arguments)
     {
         public Option<CultureInfo> GetCultureInfo()
@@ -20,7 +22,6 @@ internal static class ConsoleArguments
                 .Match(
                     none: FixedCalendarFormat(arguments),
                     some: StreamingCalendarFormat(arguments));
-
     }
 
     extension(IEnumerable<string> arguments)
@@ -52,8 +53,6 @@ internal static class ConsoleArguments
                 .WhereSelect(selector)
                 .FirstOrNone();
     }
-
-    private const int EndYearOffset = 1;
 
     public static Environment GetEnvironment(IEnumerable<string> arguments)
         => new(arguments.GetFancyMode() is [_], "MMMM yyyy");
@@ -97,7 +96,7 @@ internal static class ConsoleArguments
 
     private static Func<string, Option<Unit>> HasArgument(string givenArgument)
         => argument
-            => Option.FromBoolean(argument == givenArgument);
+            => (argument == givenArgument).Then(Unit.Value);
 
     private static string TwoLetterIsoRegionNameFromCulture()
         => CultureInfo.CurrentCulture.CultureTypes.HasFlag(CultureTypes.UserCustomCulture)
