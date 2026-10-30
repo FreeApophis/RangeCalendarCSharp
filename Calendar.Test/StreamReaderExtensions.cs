@@ -1,4 +1,4 @@
-﻿using Funcky;
+﻿using Funcky.Extensions;
 using Funcky.Monads;
 
 namespace Calendar.Test;
@@ -8,8 +8,7 @@ public static class StreamReaderExtensions
     extension(StreamReader streamReader)
     {
         public IEnumerable<string> ReadLines()
-            => Sequence
-                .Successors(ReadLineOrNone(streamReader), NextLine(streamReader));
+            => Enumerable.Successors(ReadLineOrNone(streamReader), NextLine(streamReader));
     }
 
     private static Func<string, Option<string>> NextLine(StreamReader streamReader)

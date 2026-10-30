@@ -33,14 +33,16 @@ internal static class ConsoleCalendar
                select TitleFormat(title);
 
         private IEnumerable<DateOnly> GetDays()
-            => format.Match(
-                singleYear: DaysOfSingleYear,
-                fromYear: DaysStartingWithYear,
-                yearRange: DaysOfYearRange);
+            => format switch
+            {
+                SingleYearFormat singleYear => DaysOfSingleYear(singleYear),
+                FromYearFormat fromYear => DaysStartingWithYear(fromYear),
+                YearRangeFormat yearRange => DaysOfYearRange(yearRange),
+            };
     }
 
     private static int CalendarWidth
-        => (HorizontalMonths * MonthLayouter.WidthOfWeek) + SeparatorsBetweenMonths();
+            => (HorizontalMonths * MonthLayouter.WidthOfWeek) + SeparatorsBetweenMonths();
 
     private static IReadOnlyList<string> TitleFormat(string title)
         => [string.Empty, title, string.Empty];
@@ -48,14 +50,14 @@ internal static class ConsoleCalendar
     private static int SeparatorsBetweenMonths()
         => HorizontalMonths - 1;
 
-    private static IEnumerable<DateOnly> DaysOfYearRange(CalendarFormat.YearRange yearRange)
+    private static IEnumerable<DateOnly> DaysOfYearRange(YearRangeFormat yearRange)
         => DaysFrom(yearRange.StartYear)
             .TakeWhile(day => day.Year <= yearRange.EndYear);
 
-    private static IEnumerable<DateOnly> DaysStartingWithYear(CalendarFormat.FromYear fromYear)
+    private static IEnumerable<DateOnly> DaysStartingWithYear(FromYearFormat fromYear)
         => DaysFrom(fromYear.StartYear);
 
-    private static IEnumerable<DateOnly> DaysOfSingleYear(CalendarFormat.SingleYear singleYear)
+    private static IEnumerable<DateOnly> DaysOfSingleYear(SingleYearFormat singleYear)
         => DaysFrom(singleYear.Year)
             .TakeWhile(day => day.Year == singleYear.Year);
 

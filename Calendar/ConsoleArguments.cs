@@ -27,12 +27,12 @@ internal static class ConsoleArguments
     extension(IEnumerable<string> arguments)
     {
         private int StartYear()
-            => SelectArgument(arguments, ParseExtensions.ParseInt32OrNone)
+            => SelectArgument(arguments, int.ParseOrNone)
                 .GetOrElse(DateTime.Now.Year);
 
         private Option<int> EndYear()
             => arguments
-                .WhereSelect(ParseExtensions.ParseInt32OrNone)
+                .WhereSelect(int.ParseOrNone)
                 .Skip(EndYearOffset)
                 .FirstOrNone();
     }
@@ -73,16 +73,16 @@ internal static class ConsoleArguments
     private static Func<int, CalendarFormat> YearRangeFormat(IEnumerable<string> arguments)
         => endYear
             => arguments.StartYear() < endYear
-                ? new CalendarFormat.YearRange(arguments.StartYear(), endYear)
-                : new CalendarFormat.SingleYear(arguments.StartYear());
+                ? new YearRangeFormat(arguments.StartYear(), endYear)
+                : new SingleYearFormat(arguments.StartYear());
 
     private static Func<CalendarFormat> SingleYearFormat(IEnumerable<string> arguments)
         => ()
-            => new CalendarFormat.SingleYear(arguments.StartYear());
+            => new SingleYearFormat(arguments.StartYear());
 
     private static Func<Unit, CalendarFormat> StreamingCalendarFormat(IEnumerable<string> arguments)
         => _
-            => new CalendarFormat.FromYear(arguments.StartYear());
+            => new FromYearFormat(arguments.StartYear());
 
     private static Option<CultureInfo> ToCultureInfo(string cultureString)
         => CultureInfo

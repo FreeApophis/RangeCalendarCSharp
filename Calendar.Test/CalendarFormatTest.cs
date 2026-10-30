@@ -13,16 +13,16 @@ public class CalendarFormatTest
     public static TheoryData<string[], CalendarFormat> GetDifferentProgramInputs()
         => new()
         {
-            { [], new CalendarFormat.SingleYear(DateTime.Now.Year) },
-            { ["2020"], new CalendarFormat.SingleYear(2020) },
-            { ["2020", "2020"], new CalendarFormat.SingleYear(2020) },
-            { ["fancy"], new CalendarFormat.SingleYear(DateTime.Now.Year) },
-            { ["stream"], new CalendarFormat.FromYear(DateTime.Now.Year) },
-            { ["2005", "2001"], new CalendarFormat.SingleYear(2005) },
-            { ["2000", "2005"], new CalendarFormat.YearRange(2000, 2005) },
-            { ["2000", "stream"], new CalendarFormat.FromYear(2000) },
-            { ["2005", "2020", "stream"], new CalendarFormat.FromYear(2005) },
-            { ["2020", "2020", "stream"], new CalendarFormat.FromYear(2020) },
-            { ["something", "different", "fancy"], new CalendarFormat.SingleYear(DateTime.Now.Year) },
+            { [], new SingleYearFormat(DateTime.Now.Year) },
+            { ["2020"], new SingleYearFormat(2020) },
+            { ["2020", "2020"], new SingleYearFormat(2020) },
+            { ["fancy"], new SingleYearFormat(DateTime.Now.Year) },
+            { ["stream"], new FromYearFormat(DateTime.Now.Year) },
+            { ["2005", "2001"], new SingleYearFormat(2005) },
+            { ["2000", "2005"], new YearRangeFormat(2000, 2005) },
+            { ["2000", "stream"], new FromYearFormat(2000) },
+            { ["2005", "2020", "stream"], new FromYearFormat(2005) },
+            { ["2020", "2020", "stream"], new FromYearFormat(2020) },
+            { ["something", "different", "fancy"], new SingleYearFormat(DateTime.Now.Year) },
         };
 }

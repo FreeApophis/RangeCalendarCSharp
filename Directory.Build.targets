@@ -8,5 +8,9 @@
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="Polyadic.CodeStyle" PrivateAssets="all" />
+        <PackageReference Include="Funcky.Analyzers">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
     </ItemGroup>
 </Project>

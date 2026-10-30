@@ -32,22 +32,24 @@ internal static class StringExtensions
     extension(CalendarFormat calendarFormat)
     {
         public string ApplyCalendarFormat()
-            => calendarFormat.Match(
-                singleYear: FormatSingleYear,
-                fromYear: FormatFromYear,
-                yearRange: FormatYearRange);
+            => calendarFormat switch
+            {
+                SingleYearFormat singleYear => FormatSingleYear(singleYear),
+                FromYearFormat fromYear => FormatFromYear(fromYear),
+                YearRangeFormat yearRange => FormatYearRange(yearRange),
+            };
     }
 
     private static Reader<Environment, bool> ShouldColorize(Color color)
         => environment
             => environment is { IsFancy: true } && color != Color.Transparent;
 
-    private static string FormatYearRange(CalendarFormat.YearRange yearRange)
+    private static string FormatYearRange(YearRangeFormat yearRange)
         => string.Format(Resource.YearRangeFormat, yearRange.StartYear, yearRange.EndYear);
 
-    private static string FormatFromYear(CalendarFormat.FromYear fromYear)
+    private static string FormatFromYear(FromYearFormat fromYear)
         => string.Format(Resource.FromYearFormat, fromYear.StartYear);
 
-    private static string FormatSingleYear(CalendarFormat.SingleYear singleYear)
+    private static string FormatSingleYear(SingleYearFormat singleYear)
         => string.Format(Resource.SingleYearFormat, singleYear.Year);
 }

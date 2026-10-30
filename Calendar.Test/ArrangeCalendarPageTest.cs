@@ -13,9 +13,7 @@ public class ArrangeCalendarPageTest
     {
         CultureHelper.SetAllCultures(new CultureInfo("de-CH"));
 
-        var arrangePage = new CalendarFormat
-            .SingleYear(2000)
-            .ArrangeCalendarPage();
+        var arrangePage = new SingleYearFormat(2000).ArrangeCalendarPage();
 
         var result = arrangePage(new Environment(false, "MMMM yyyy")).Materialize();
 
@@ -28,7 +26,13 @@ public class ArrangeCalendarPageTest
             .ForEach(CheckLine);
 
     private static void CheckLine(EitherOrBoth<string, string> line)
-        => Assert.True(line.Match(False, False, CompareLines), Message(line));
+        => Assert.True(Match(line), Message(line));
+
+    private static bool Match(EitherOrBoth<string, string> line)
+        => line.Match(
+            left: False,
+            right: False,
+            both: CompareLines);
 
     private static bool CompareLines(string expected, string actual)
     {
@@ -39,7 +43,7 @@ public class ArrangeCalendarPageTest
 
     private static string Message(EitherOrBoth<string, string> line)
         => line.Match(
-            left => $"Right missing! left = {left}",
-            right => $"Left missing! right = {right}",
-            (_, _) => string.Empty);
+            left: left => $"Right missing! left = {left}",
+            right: right => $"Left missing! right = {right}",
+            both: (_, _) => string.Empty);
 }
